@@ -35,12 +35,18 @@ namespace LMS.Data.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
@@ -83,7 +89,7 @@ namespace LMS.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Document");
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("LMS.Core.Entities.User", b =>

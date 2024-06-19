@@ -35,6 +35,8 @@ namespace LMS.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ParentId = table.Column<int>(type: "int", nullable: true),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ElementType = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModuleId = table.Column<int>(type: "int", nullable: true),
@@ -67,7 +69,7 @@ namespace LMS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Document",
+                name: "Documents",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -80,9 +82,9 @@ namespace LMS.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Document", x => x.Id);
+                    table.PrimaryKey("PK_Documents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Document_Users_UserId",
+                        name: "FK_Documents_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -110,8 +112,8 @@ namespace LMS.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Document_UserId",
-                table: "Document",
+                name: "IX_Documents_UserId",
+                table: "Documents",
                 column: "UserId");
         }
 
@@ -122,7 +124,7 @@ namespace LMS.Data.Migrations
                 name: "CourseElements");
 
             migrationBuilder.DropTable(
-                name: "Document");
+                name: "Documents");
 
             migrationBuilder.DropTable(
                 name: "Users");

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Data.Migrations
 {
     [DbContext(typeof(LmsDbContext))]
-    [Migration("20240619182800_InitialCreate")]
+    [Migration("20240619193036_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -38,12 +38,18 @@ namespace LMS.Data.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
@@ -86,7 +92,7 @@ namespace LMS.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Document");
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("LMS.Core.Entities.User", b =>

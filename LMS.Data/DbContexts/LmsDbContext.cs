@@ -7,6 +7,7 @@ public class LmsDbContext(DbContextOptions<LmsDbContext> options) : DbContext(op
 {
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Document> Documents => Set<Document>();
     public DbSet<CourseElement> CourseElements => Set<CourseElement>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
