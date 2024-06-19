@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lms.Data.DbContexts;
 
-public class LmsDbContext(DbContextOptions options) : DbContext(options)
+public class LmsDbContext(DbContextOptions<LmsDbContext> options) : DbContext(options)
 {
 
     public DbSet<User> Users => Set<User>();
