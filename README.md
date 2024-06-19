@@ -13,24 +13,13 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/suny-am/dotnet-container-dev-env-starter">
+  <a href="https://github.com/sunyam-lexicon-2024/lms">
     <img src=".docs/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">.NET Containerized Development Enviroment</h3>
+<h3 align="center"> LMS Application</h3>
+<h4 align="center"> Silver Astronauts </h4>
 
-  <p align="center">
- LMS application
-    <br />
-    <a href="https://github.com/suny-am/dotnet-container-dev-env-starter"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/suny-am/dotnet-container-dev-env-starter">View Demo</a>
-    ·
-    <a href="https://github.com/suny-am/dotnet-container-dev-env-starter/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/suny-am/dotnet-container-dev-env-starter/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
-  </p>
 </div>
 
 
@@ -98,7 +87,7 @@ brew install podman
 Once either docker or podman is available on the host the project is ready for use. Simply clone the repo and you are ready to start development!
 
    ```sh
-   git clone https://github.com/suny-am/dotnet-container-dev-env-starter.git
+   git clone https://github.com/sunyam-lexicon-2024/lms.git
    ```
 
 
@@ -136,7 +125,7 @@ Don't forget to give the project a star! Thanks again!
 
 #### 1. Fork the Project
 ```sh
-gh repo fork suny-am/dotnet-container-dev-env-starter --clone
+gh repo fork sunyam-lexicon-2024/lms --clone
 cd dotnet-container-dev-env-starter
 ```
 #### 2. Create your Feature Branch 
@@ -174,11 +163,11 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Dockerfile
-- [x] Docker Compose
-- [x] VS Code Dev Containers
+- [ ] Feature1
+- [ ] Feature2
+- [ ] Feature3
 
-See the [open issues](https://github.com/suny-am/dotnet-container-dev-env-starter/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/sunyam-lexicon-2024/lms/issues) for a full list of proposed features (and known issues).
 
 <p align="right"><a href="#readme-top">🔝</a></p>
 
@@ -194,7 +183,7 @@ Don't forget to give the project a star! Thanks again!
 
 #### 1. Fork the Project
 ```sh
-gh repo fork suny-am/dotnet-container-dev-env-starter --clone
+gh repo fork sunyam-lexicon-2024/lms --clone
 cd dotnet-container-dev-env-starter
 ```
 #### 2. Create your Feature Branch 
@@ -232,23 +221,23 @@ Distributed under the MIT License. See [LICENCE.txt](LICENCE.txt) for more infor
 
 Your Name - [@bsky.sunyam.social](https://bsky.app/profile/bsky.sunyam.social) - visualarea.1@gmail.com
 
-Project Link: [https://github.com/suny-am/dotnet-container-dev-env-starter](https://github.com/suny-am/dotnet-container-dev-env-starter)
+Project Link: [https://github.com/sunyam-lexicon-2024/lms](https://github.com/sunyam-lexicon-2024/lms)
 
 <p align="right"><a href="#readme-top">🔝</a></p>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/suny-am/dotnet-container-dev-env-starter.svg?style=for-the-badge
-[contributors-url]: https://github.com/suny-am/dotnet-container-dev-env-starter/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/suny-am/dotnet-container-dev-env-starter?style=for-the-badge
-[forks-url]: https://github.com/suny-am/dotnet-container-dev-env-starter/network/members
-[stars-shield]: https://img.shields.io/github/stars/suny-am/dotnet-container-dev-env-starter.svg?style=for-the-badge
-[stars-url]: https://github.com/suny-am/dotnet-container-dev-env-starter/stargazers
-[issues-shield]: https://img.shields.io/github/issues/suny-am/dotnet-container-dev-env-starter.svg?style=for-the-badge
-[issues-url]: https://github.com/suny-am/dotnet-container-dev-env-starter/issues
-[license-shield]: https://img.shields.io/github/license/suny-am/dotnet-container-dev-env-starter.svg?style=for-the-badge
-[license-url]: https://github.com/suny-am/dotnet-container-dev-env-starter/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/sunyam-lexicon-2024/lms.svg?style=for-the-badge
+[contributors-url]: https://github.com/sunyam-lexicon-2024/lms/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/sunyam-lexicon-2024/lms?style=for-the-badge
+[forks-url]: https://github.com/sunyam-lexicon-2024/lms/network/members
+[stars-shield]: https://img.shields.io/github/stars/sunyam-lexicon-2024/lms.svg?style=for-the-badge
+[stars-url]: https://github.com/sunyam-lexicon-2024/lms/stargazers
+[issues-shield]: https://img.shields.io/github/issues/sunyam-lexicon-2024/lms.svg?style=for-the-badge
+[issues-url]: https://github.com/sunyam-lexicon-2024/lms/issues
+[license-shield]: https://img.shields.io/github/license/sunyam-lexicon-2024/lms.svg?style=for-the-badge
+[license-url]: https://github.com/sunyam-lexicon-2024/lms/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/carl-sandberg-01070a2b6/
 [product-screenshot]: .docs/images/screenshot.png
