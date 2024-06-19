@@ -12,7 +12,11 @@ public static class WebAppExtensions
         app.UseDefaultExceptionHandler()
            .UseFastEndpoints(config =>
            {
-               config.Endpoints.RoutePrefix = "api";
+               config.Endpoints.RoutePrefix = "api"; // prefix all routes with "/api"
+               config.Endpoints.Configurator = ep =>
+               {
+                   ep.AllowAnonymous(); // disable auth temporarily
+               };
            });
 
         if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DevContainers")
