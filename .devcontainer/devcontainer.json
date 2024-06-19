@@ -1,6 +1,6 @@
 {
 	"name": ".NET Development Starter",
-	"dockerComposeFile": "../docker-compose.yaml",
+	"dockerComposeFile": "../docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
 	"shutdownAction": "stopCompose",

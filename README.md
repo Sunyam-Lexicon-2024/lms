@@ -20,7 +20,7 @@
 <h3 align="center">.NET Containerized Development Enviroment</h3>
 
   <p align="center">
- Starter for local containerized .NET development 
+ LMS application
     <br />
     <a href="https://github.com/suny-am/dotnet-container-dev-env-starter"><strong>Explore the docs »</strong></a>
     <br />
@@ -65,9 +65,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-A Podman compatible (rootless) setup for container native .NET development.
-The docker-compose.yaml is only an example of a simple setup for containerized development
-with a MSSQL 2022 instance.
+TBD
 
 
 
