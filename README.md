@@ -17,20 +17,9 @@
     <img src=".docs/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">.NET Containerized Development Enviroment</h3>
+<h3 align="center"> LMS Application</h3>
+<h4 align="center"> Silver Astronauts </h4>
 
-  <p align="center">
- Starter for local containerized .NET development 
-    <br />
-    <a href="https://github.com/suny-am/dotnet-container-dev-env-starter"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/suny-am/dotnet-container-dev-env-starter">View Demo</a>
-    ·
-    <a href="https://github.com/suny-am/dotnet-container-dev-env-starter/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/suny-am/dotnet-container-dev-env-starter/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
-  </p>
 </div>
 
 
@@ -65,9 +54,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-A Podman compatible (rootless) setup for container native .NET development.
-The docker-compose.yaml is only an example of a simple setup for containerized development
-with a MSSQL 2022 instance.
+TBD
 
 
 
@@ -176,9 +163,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Dockerfile
-- [x] Docker Compose
-- [x] VS Code Dev Containers
+- [ ] Feature1
+- [ ] Feature2
+- [ ] Feature3
 
 See the [open issues](https://github.com/suny-am/dotnet-container-dev-env-starter/issues) for a full list of proposed features (and known issues).
 
