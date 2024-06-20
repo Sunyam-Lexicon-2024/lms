@@ -1,7 +1,4 @@
-using FastEndpoints;
-using Lms.Data.DbContexts;
 using LMS.Data.Seeds;
-using Microsoft.EntityFrameworkCore;
 
 namespace LMS.API.Extensions;
 
@@ -19,17 +16,14 @@ public static class WebAppExtensions
                };
            });
 
-            // Uncomment to seed
-            //     await app.SeedDataAsync();
         if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DevContainers")
         {
-
             app.UseDeveloperExceptionPage();
 
-            // if (Environment.GetEnvironmentVariable("SEED_DATA") == "1")
-            // {
-            //     await app.SeedDataAsync();
-            // }
+            if (Environment.GetEnvironmentVariable("SEED_DATA") == "1")
+            {
+                await app.SeedDataAsync();
+            }
         }
 
         return app;

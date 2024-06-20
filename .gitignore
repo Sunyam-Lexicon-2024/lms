@@ -5,5 +5,5 @@ bin/
 # SQL Queries
 *.sql
 
-#Visual studio
+# Visual studio
 .vs

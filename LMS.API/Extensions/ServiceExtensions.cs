@@ -8,8 +8,8 @@ public static class ServiceExtensions
         services.AddFastEndpoints();
 
         services.AddDbContextFactory<LmsDbContext>(options =>
-            options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=LmsDbContext;Trusted_Connection=True;MultipleActiveResultSets=true"));
-            // options.UseSqlServer(config.GetConnectionString("Default")));
+            options.UseSqlServer(config.GetConnectionString("Default")));
+            // options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=LmsDbContext;Trusted_Connection=True;MultipleActiveResultSets=true"));
 
         return services;
     }
