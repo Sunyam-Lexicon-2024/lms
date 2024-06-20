@@ -4,11 +4,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Lms.Data.DbContexts
 {
-    public class LmsDbContextFactory : IDesignTimeDbContextFactory<LmsDbContext>
+    public class LmsDesignTimeDbContextFactory : IDesignTimeDbContextFactory<LmsDbContext>
     {
         public LmsDbContext CreateDbContext(string[] args)
         {
-
             var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
             IConfigurationRoot configuration;
 
