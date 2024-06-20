@@ -1,2 +1,6 @@
+# Build artifacts
 obj/
 bin/
+
+# SQL Queries
+*.sql

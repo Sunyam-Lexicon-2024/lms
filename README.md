@@ -62,6 +62,8 @@ TBD
 
 ### Built With
 
+[![.NET][.NET]][.NET-url]
+[![Blazor][Blazor]][Blazor-url]
 [![Podman][Podman]][Podman-url]
 [![Docker][Docker]][Docker-url]
 
@@ -256,7 +258,11 @@ Project Link: [https://github.com/sunyam-lexicon-2024/lms](https://github.com/su
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/carl-sandberg-01070a2b6/
 [product-screenshot]: .docs/images/screenshot.png
-[Podman]: https://img.shields.io/badge/podman-000000?style=for-the-badge&logo=podman&logoColor=white&logoSize=large&color=892CA0
-[Podman-url]:https://podman.io
 [Docker]: https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
 [Docker-url]:https://docker.com
+[Podman]: https://img.shields.io/badge/podman-000000?style=for-the-badge&logo=podman&logoColor=white&logoSize=large&color=892CA0
+[Podman-url]:https://podman.io
+[.NET]: https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white
+[.NET-url]: https://dotnet.microsoft.com/
+[Blazor]: https://img.shields.io/badge/blazor-512BD4?style=for-the-badge&logo=blazor
+[Blazor-url]:https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor

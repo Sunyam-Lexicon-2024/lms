@@ -8,6 +8,5 @@ public abstract class CourseElement
     public DateOnly EndDate { get; set; }
     public int? ParentId { get; set; }
     public CourseElement? Parent { get; set; }
-    public ICollection<CourseElement> ChildElements => [];
-    public ICollection<User> Users => [];
+    public ICollection<CourseElement> ChildElements { get; } = [];
 }

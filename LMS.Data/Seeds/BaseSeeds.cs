@@ -18,20 +18,12 @@ public class BaseSeeds(LmsDbContext context)
         try
         {
             await GenerateCourses(3);
-            await GenerateTeachers(5);
+            _context.CourseElements.AddRange(_courses);
+            await _context.SaveChangesAsync();
+
             await GenerateStudents(50);
-
-
-            foreach (var u in _users)
-            {
-                _context.Users.Add(u);
-            }
-
-            foreach (var c in _courses)
-            {
-                _context.CourseElements.Add(c);
-            }
-            
+            await GenerateTeachers(5);
+            _context.Users.AddRange(_users);
             await _context.SaveChangesAsync();
         }
         catch (Exception)
@@ -60,6 +52,7 @@ public class BaseSeeds(LmsDbContext context)
 
     private async Task GenerateTeachers(int count)
     {
+        var courses = _context.CourseElements.OfType<Course>().ToList();
         await Task.Run(() =>
         {
             for (int i = 0; i < count; i++)
@@ -67,22 +60,21 @@ public class BaseSeeds(LmsDbContext context)
                 string first = _faker.Name.FirstName();
                 string last = _faker.Name.LastName();
                 string domain = _faker.Internet.DomainName();
-                User teacherToAdd = new()
+                Teacher teacherToAdd = new()
                 {
                     Name = $"{first} {last}",
-                    Email = $"{first}.{last}@$lms-school.com",
+                    Email = $"{first.ToLower()}.{last.ToLower()}@lms-school.com",
                     Password = _faker.Internet.Password(),
-                    Role = Role.Teacher
                 };
-                teacherToAdd.Courses.Add(_faker.PickRandom(_courses));
+                teacherToAdd.Courses.Add(_faker.PickRandom(courses));
                 _users.Add(teacherToAdd);
             }
         });
     }
 
-
     private async Task GenerateStudents(int count)
     {
+        var courses = _context.CourseElements.OfType<Course>().ToList();
         await Task.Run(() =>
         {
             for (int i = 0; i < count; i++)
@@ -90,14 +82,15 @@ public class BaseSeeds(LmsDbContext context)
                 string first = _faker.Name.FirstName();
                 string last = _faker.Name.LastName();
                 string domain = _faker.Internet.DomainName();
-                User studentToAdd = new()
+                Course course = _faker.PickRandom(courses);
+                Student studentToAdd = new()
                 {
                     Name = $"{first} {last}",
-                    Email = $"{first}.{last}@${domain}.com",
+                    Email = $"{first}.{last}@{domain}",
                     Password = _faker.Internet.Password(),
-                    Role = Role.Student
+                    CourseId = course.Id,
+                    Course = course
                 };
-                studentToAdd.Courses.Add(_faker.PickRandom(_courses));
                 _users.Add(studentToAdd);
             }
         });
