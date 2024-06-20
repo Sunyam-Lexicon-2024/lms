@@ -85,7 +85,9 @@ public class BaseSeeds(LmsDbContext context)
 
     private async Task GenerateActivities(int count)
     {
-        var courses = _context.CourseElements.OfType<Course>().ToList();
+        var courses = _context.CourseElements.OfType<Course>()
+                                            .Where(c => c.ChildElements.Count > 0)
+                                            .ToList();
         var course = _faker.PickRandom(courses);
         var module = _faker.PickRandom(course.ChildElements);
 
@@ -99,7 +101,8 @@ public class BaseSeeds(LmsDbContext context)
                     StartDate = DateOnly.FromDateTime(DateTime.Now),
                     EndDate = DateOnly.FromDateTime(DateTime.Now.AddYears(1)),
                     Parent = module,
-                    ParentId = module.Id
+                    ParentId = module.Id,
+                    Type = _faker.PickRandom<ActivityType>()
                 };
 
                 _activities.Add(activityToAdd);
