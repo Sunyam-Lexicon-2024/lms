@@ -14,7 +14,8 @@ public static class WebAppExtensions
                {
                    ep.AllowAnonymous(); // disable auth temporarily
                };
-           });
+           })
+           .UseSwaggerGen();
 
         if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DevContainers")
         {
