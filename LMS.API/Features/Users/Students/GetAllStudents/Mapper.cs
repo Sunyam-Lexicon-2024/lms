@@ -1,7 +1,3 @@
-using FastEndpoints;
-using LMS.Core.Entities;
-using LMS.Core.Models;
-
 namespace Users.Students.GetAllStudents;
 
 public class Mapper : ResponseMapper<StudentBaseModel, Student>
