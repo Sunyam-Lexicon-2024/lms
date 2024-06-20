@@ -1,6 +1,7 @@
 services:
 
   app:
+    container_name: lms-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -8,6 +9,8 @@ services:
       args:
         - BUILDKIT_INLINE_CACHE=0
     user: vscode
+    environment:
+      - DOTNET_ENVIRONMENT=DevContainers
     volumes:
       - .:/workspace
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
@@ -16,6 +19,7 @@ services:
       - development
 
   database:
+    container_name: lms-db
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     environment:
       ACCEPT_EULA: "Y"
