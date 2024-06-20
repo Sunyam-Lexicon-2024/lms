@@ -55,47 +55,41 @@ namespace LMS.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false),
-                    ActivityId = table.Column<int>(type: "int", nullable: true),
-                    ModuleId = table.Column<int>(type: "int", nullable: true)
+                    Role = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    CourseId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_CourseElements_ActivityId",
-                        column: x => x.ActivityId,
-                        principalTable: "CourseElements",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Users_CourseElements_ModuleId",
-                        column: x => x.ModuleId,
+                        name: "FK_Users_CourseElements_CourseId",
+                        column: x => x.CourseId,
                         principalTable: "CourseElements",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "CoursesUsersJunction",
+                name: "CoursesTeachersJunction",
                 columns: table => new
                 {
-                    CoursesId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<int>(type: "int", nullable: false)
+                    CourseTeachersId = table.Column<int>(type: "int", nullable: false),
+                    TeacherCoursesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CoursesUsersJunction", x => new { x.CoursesId, x.UsersId });
+                    table.PrimaryKey("PK_CoursesTeachersJunction", x => new { x.CourseTeachersId, x.TeacherCoursesId });
                     table.ForeignKey(
-                        name: "FK_CoursesUsersJunction_CourseElements_CoursesId",
-                        column: x => x.CoursesId,
+                        name: "FK_CoursesTeachersJunction_CourseElements_TeacherCoursesId",
+                        column: x => x.TeacherCoursesId,
                         principalTable: "CourseElements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CoursesUsersJunction_Users_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_CoursesTeachersJunction_Users_CourseTeachersId",
+                        column: x => x.CourseTeachersId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -187,9 +181,9 @@ namespace LMS.Data.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoursesUsersJunction_UsersId",
-                table: "CoursesUsersJunction",
-                column: "UsersId");
+                name: "IX_CoursesTeachersJunction_TeacherCoursesId",
+                table: "CoursesTeachersJunction",
+                column: "TeacherCoursesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Documents_CourseElementId",
@@ -207,14 +201,9 @@ namespace LMS.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_ActivityId",
+                name: "IX_Users_CourseId",
                 table: "Users",
-                column: "ActivityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_ModuleId",
-                table: "Users",
-                column: "ModuleId");
+                column: "CourseId");
         }
 
         /// <inheritdoc />
@@ -224,7 +213,7 @@ namespace LMS.Data.Migrations
                 name: "Comment");
 
             migrationBuilder.DropTable(
-                name: "CoursesUsersJunction");
+                name: "CoursesTeachersJunction");
 
             migrationBuilder.DropTable(
                 name: "Documents");

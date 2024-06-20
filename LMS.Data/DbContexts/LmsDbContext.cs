@@ -30,10 +30,32 @@ public class LmsDbContext(DbContextOptions<LmsDbContext> options) : DbContext(op
                     .WithOne(p => p.Parent)
                     .HasForeignKey(ce => ce.ParentId);
 
+        modelBuilder.Entity<User>()
+                    .ToTable("Users")
+                    .HasDiscriminator<string>("Role")
+                    .HasValue<Student>("Student")
+                    .HasValue<Teacher>("Teacher");
+
         modelBuilder.Entity<Course>()
-                    .HasMany(e => e.Users)
-                    .WithMany(e => e.Courses)
-                    .UsingEntity("CoursesUsersJunction");
+                    .HasMany(c => c.Teachers)
+                    .WithMany(t => t.Courses)
+                    .UsingEntity(
+                        "CoursesTeachersJunction",
+                        l => l.HasOne(typeof(Teacher))
+                            .WithMany()
+                            .HasForeignKey("CourseTeachersId")
+                            .OnDelete(DeleteBehavior.Restrict),
+                        r => r.HasOne(typeof(Course))
+                            .WithMany()
+                            .HasForeignKey("TeacherCoursesId")
+                            .OnDelete(DeleteBehavior.Restrict),
+                        j => j.HasKey("CourseTeachersId", "TeacherCoursesId")
+                    );
+
+        modelBuilder.Entity<Student>()
+                    .HasOne(s => s.Course)
+                    .WithMany(c => c.Students)
+                    .HasForeignKey(s => s.CourseId);
 
         modelBuilder.Entity<Activity>()
                     .Property(a => a.Type)

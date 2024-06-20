@@ -13,6 +13,9 @@ public static class ServiceExtensions
         services.AddDbContext<LmsDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("Default")));
 
+        services.AddDbContextFactory<LmsDbContext>(options =>
+            options.UseSqlServer(config.GetConnectionString("Default")));
+
         return services;
     }
 }

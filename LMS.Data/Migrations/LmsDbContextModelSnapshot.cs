@@ -22,19 +22,19 @@ namespace LMS.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CoursesUsersJunction", b =>
+            modelBuilder.Entity("CoursesTeachersJunction", b =>
                 {
-                    b.Property<int>("CoursesId")
+                    b.Property<int>("CourseTeachersId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsersId")
+                    b.Property<int>("TeacherCoursesId")
                         .HasColumnType("int");
 
-                    b.HasKey("CoursesId", "UsersId");
+                    b.HasKey("CourseTeachersId", "TeacherCoursesId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("TeacherCoursesId");
 
-                    b.ToTable("CoursesUsersJunction");
+                    b.ToTable("CoursesTeachersJunction");
                 });
 
             modelBuilder.Entity("LMS.Core.Entities.Comment", b =>
@@ -152,15 +152,9 @@ namespace LMS.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ActivityId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ModuleId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -170,16 +164,18 @@ namespace LMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActivityId");
+                    b.ToTable("Users", (string)null);
 
-                    b.HasIndex("ModuleId");
+                    b.HasDiscriminator<string>("Role").HasValue("User");
 
-                    b.ToTable("Users");
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("LMS.Core.Entities.Activity", b =>
@@ -217,18 +213,37 @@ namespace LMS.Data.Migrations
                     b.HasDiscriminator().HasValue("Module");
                 });
 
-            modelBuilder.Entity("CoursesUsersJunction", b =>
+            modelBuilder.Entity("LMS.Core.Entities.Student", b =>
                 {
-                    b.HasOne("LMS.Core.Entities.Course", null)
+                    b.HasBaseType("LMS.Core.Entities.User");
+
+                    b.Property<int?>("CourseId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasDiscriminator().HasValue("Student");
+                });
+
+            modelBuilder.Entity("LMS.Core.Entities.Teacher", b =>
+                {
+                    b.HasBaseType("LMS.Core.Entities.User");
+
+                    b.HasDiscriminator().HasValue("Teacher");
+                });
+
+            modelBuilder.Entity("CoursesTeachersJunction", b =>
+                {
+                    b.HasOne("LMS.Core.Entities.Teacher", null)
                         .WithMany()
-                        .HasForeignKey("CoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("CourseTeachersId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("LMS.Core.Entities.User", null)
+                    b.HasOne("LMS.Core.Entities.Course", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("TeacherCoursesId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -283,17 +298,6 @@ namespace LMS.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LMS.Core.Entities.User", b =>
-                {
-                    b.HasOne("LMS.Core.Entities.Activity", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ActivityId");
-
-                    b.HasOne("LMS.Core.Entities.Module", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ModuleId");
-                });
-
             modelBuilder.Entity("LMS.Core.Entities.Activity", b =>
                 {
                     b.HasOne("LMS.Core.Entities.Module", null)
@@ -306,6 +310,15 @@ namespace LMS.Data.Migrations
                     b.HasOne("LMS.Core.Entities.Course", null)
                         .WithMany("Modules")
                         .HasForeignKey("CourseId");
+                });
+
+            modelBuilder.Entity("LMS.Core.Entities.Student", b =>
+                {
+                    b.HasOne("LMS.Core.Entities.Course", "Course")
+                        .WithMany("Students")
+                        .HasForeignKey("CourseId");
+
+                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("LMS.Core.Entities.CourseElement", b =>
@@ -323,21 +336,16 @@ namespace LMS.Data.Migrations
                     b.Navigation("Documents");
                 });
 
-            modelBuilder.Entity("LMS.Core.Entities.Activity", b =>
-                {
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("LMS.Core.Entities.Course", b =>
                 {
                     b.Navigation("Modules");
+
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("LMS.Core.Entities.Module", b =>
                 {
                     b.Navigation("Activities");
-
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
