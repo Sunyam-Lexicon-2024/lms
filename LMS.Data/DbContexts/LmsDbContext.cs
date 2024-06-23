@@ -2,7 +2,7 @@ using LMS.Core.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lms.Data.DbContexts;
+namespace LMS.Data.DbContexts;
 
 public class LmsDbContext(DbContextOptions<LmsDbContext> options) :  IdentityDbContext<User>(options)
 {

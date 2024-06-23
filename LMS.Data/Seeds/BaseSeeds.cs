@@ -1,4 +1,4 @@
-using Lms.Data.DbContexts;
+using LMS.Data.DbContexts;
 using LMS.Core.Entities;
 using Bogus;
 

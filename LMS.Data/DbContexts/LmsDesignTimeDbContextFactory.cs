@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace Lms.Data.DbContexts
+namespace LMS.Data.DbContexts
 {
     public class LmsDesignTimeDbContextFactory : IDesignTimeDbContextFactory<LmsDbContext>
     {
