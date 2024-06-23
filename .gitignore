@@ -7,3 +7,8 @@ bin/
 
 # Visual studio
 .vs
+*.user
+
+# Git
+.gitignore
+/.gitignore
