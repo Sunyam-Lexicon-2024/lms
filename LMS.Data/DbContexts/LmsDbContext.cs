@@ -1,23 +1,26 @@
 using LMS.Core.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lms.Data.DbContexts;
 
-public class LmsDbContext(DbContextOptions<LmsDbContext> options) : DbContext(options)
+public class LmsDbContext(DbContextOptions<LmsDbContext> options) :  IdentityDbContext<User>(options)
 {
 
-    public DbSet<User> Users => Set<User>();
     public DbSet<Document> Documents => Set<Document>();
     public DbSet<CourseElement> CourseElements => Set<CourseElement>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // extend parent configuration
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<CourseElement>()
                     .ToTable("CourseElements")
                     .HasDiscriminator<string>("ElementType")
                     .HasValue<Course>("Course")
                     .HasValue<Module>("Module")
-                    .HasValue<Activity>("Activity");
+                    .HasValue<ModuleActivity>("ModuleActivity");
 
         modelBuilder.Entity<CourseElement>()
                     .HasOne(ce => ce.Parent)
@@ -57,7 +60,7 @@ public class LmsDbContext(DbContextOptions<LmsDbContext> options) : DbContext(op
                     .WithMany(c => c.Students)
                     .HasForeignKey(s => s.CourseId);
 
-        modelBuilder.Entity<Activity>()
+        modelBuilder.Entity<ModuleActivity>()
                     .Property(a => a.Type)
                     .HasConversion<string>();
 
