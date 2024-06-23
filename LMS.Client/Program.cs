@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using LMS.Client.Components;
 using LMS.Client.Components.Account;
-using Lms.Data.DbContexts;
+using LMS.Data.DbContexts;
+using LMS.Client.Stores;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,11 +30,18 @@ builder.Services.AddDbContext<LmsDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddUserStore<LmsUserStore>()
     .AddEntityFrameworkStores<LmsDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<User>, IdentityNoOpEmailSender>();
+
+builder.Services.AddScoped(sp => 
+    new HttpClient() {
+        BaseAddress = new Uri(builder.Configuration["API:BaseAddress"]!)
+    }
+);
 
 var app = builder.Build();
 
