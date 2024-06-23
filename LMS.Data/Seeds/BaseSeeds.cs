@@ -64,7 +64,7 @@ public class BaseSeeds(LmsDbContext context)
                 {
                     Name = $"{first} {last}",
                     Email = $"{first.ToLower()}.{last.ToLower()}@lms-school.com",
-                    Password = _faker.Internet.Password(),
+                    PasswordHash = _faker.Internet.Password(),
                 };
                 teacherToAdd.Courses.Add(_faker.PickRandom(courses));
                 _users.Add(teacherToAdd);
@@ -87,7 +87,7 @@ public class BaseSeeds(LmsDbContext context)
                 {
                     Name = $"{first} {last}",
                     Email = $"{first}.{last}@{domain}",
-                    Password = _faker.Internet.Password(),
+                    PasswordHash = _faker.Internet.Password(),
                     CourseId = course.Id,
                     Course = course
                 };
