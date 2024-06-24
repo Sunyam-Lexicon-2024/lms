@@ -4,7 +4,7 @@ bin/
 
 # SQL
 *.sql
-*.db
+*.db*
 
 # Visual studio
 .vs
