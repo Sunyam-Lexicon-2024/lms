@@ -24,9 +24,18 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<LmsDbContext>(options =>
-    options.UseSqlite(connectionString));
+{
+    if (Environment.GetEnvironmentVariable("CONTAINER_ENV") is not null)
+    {
+        options.UseSqlite(builder.Configuration.GetConnectionString("ContainerConnection"));
+    }
+    else
+    {
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
+});
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -37,8 +46,9 @@ builder.Services.AddIdentityCore<User>(options => options.SignIn.RequireConfirme
 
 builder.Services.AddSingleton<IEmailSender<User>, IdentityNoOpEmailSender>();
 
-builder.Services.AddScoped(sp => 
-    new HttpClient() {
+builder.Services.AddScoped(sp =>
+    new HttpClient()
+    {
         BaseAddress = new Uri(builder.Configuration["API:BaseAddress"]!)
     }
 );
