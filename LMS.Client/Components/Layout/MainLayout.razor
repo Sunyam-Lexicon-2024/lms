@@ -1,19 +1,33 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <article class="content px-4">
+<header class="fixed-top">
+    <AppMenu />
+    <NavMenu />
+</header>
+
+<div class="container container-xl">
+    <main class="row mt-4">
+        <div class="col-12">
             @Body
-        </article>
+        </div>
     </main>
+
+    <div class="row">
+        <div class="col-12">
+            <div id="blazor-error-ui">
+                An unhandled error has occurred.
+                <a href="" class="reload">Reload</a>
+                <a class="dismiss">🗙</a>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+<div class="footer container-fluid fixed-bottom bg-dark text-white">
+    <footer class="container-xl">
+        <div class="col-12 py-2">
+            ©2024 Silver Astrounauts
+        </div>
+    </footer>
 </div>

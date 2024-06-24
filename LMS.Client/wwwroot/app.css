@@ -1,5 +1,6 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    padding-top: 4rem; /* Adapt to fit menu-area */
 }
 
 a, .btn-link {
