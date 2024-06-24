@@ -54,20 +54,24 @@
             </div>
             @if(UserType == "Student") 
             {
-                if(Courses.Count() > 0) 
+                if(_apiAvailable is false) 
+                {
+                    <div class="alert alert-danger" role="alert">API not available</div>
+                }
+                else if(_courses!.Count() > 0) 
                 {
                     <div class="form-floating mb-3">
-                    <InputSelect @bind-Value="@Input.CourseId" class="form-control">
-                        @foreach(var c in Courses) {
-                            <option value="@c.CourseId">@c.Name</option>
-                        }
-                    </InputSelect>
-                    <label for="ccourse">Select Course</label>
+                        <InputSelect @bind-Value="@Input.CourseId" class="form-control">
+                            @foreach(var c in _courses) {
+                                <option value="@c.CourseId">@c.Name</option>
+                            }
+                        </InputSelect>
+                        <label for="ccourse">Select Course</label>
                     </div>
                 }
                 else 
                 {
-                    <div class="form-floating mb-3">No courses available</div>
+                    <div class="alert alert-primary" role="alert">No courses available</div>
                 }
             }
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
@@ -94,12 +98,21 @@
     [SupplyParameterFromQuery] 
     private string? UserType { get; set;}
 
-    private IEnumerable<CourseModel>? Courses { get; set; } = [];
+    private bool _apiAvailable = true;
+
+    private IEnumerable<CourseModel>? _courses = [];
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     protected override async Task OnInitializedAsync() {
-        Courses = await ApiClient.GetFromJsonAsync<IEnumerable<CourseModel>>("courses/get-all-courses");
+        try 
+        {
+            _courses = await ApiClient.GetFromJsonAsync<IEnumerable<CourseModel>>("courses/get-all-courses");
+        }
+        catch(Exception ) 
+        {
+            _apiAvailable = false;
+        }
     }
 
     public async Task RegisterUser(EditContext editContext)
