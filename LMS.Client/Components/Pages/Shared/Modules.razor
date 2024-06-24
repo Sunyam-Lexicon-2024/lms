@@ -1,0 +1,53 @@
+@inject HttpClient ApiClient
+@inject UserManager<User> UserManager
+
+<ul>
+    @if (_modules.Any())
+    {
+        @foreach (var m in _modules)
+        {
+            <li>@m.Name [@m.StartDate - @m.EndDate] </li>
+        }
+    }
+    else
+    {
+        <div class="alert alert-primary" role="alert">No courses available</div>
+    }
+</ul>
+
+
+@code {
+
+    private IEnumerable<ModuleBaseModel> _modules = [];
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState.User;
+            var targetUser = await UserManager.GetUserAsync(user);
+
+            if (targetUser is not null)
+            {
+                try
+                {
+                    var response = await ApiClient.GetFromJsonAsync<ModuleData>($"users/students/{targetUser.Id}/modules")!;
+                    _modules = response!.Modules!;
+                }
+                catch
+                {
+                    _modules = [];
+                }
+            }
+        }
+    }
+
+    private class ModuleData
+    {
+        public IEnumerable<ModuleBaseModel>? Modules { get; set; }
+    }
+}
