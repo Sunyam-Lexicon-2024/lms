@@ -2,8 +2,9 @@
 obj/
 bin/
 
-# SQL Queries
+# SQL
 *.sql
+*.db
 
 # Visual studio
 .vs
