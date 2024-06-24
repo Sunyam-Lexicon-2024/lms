@@ -5,9 +5,11 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
     public override void Configure()
     {
         Get("/users/students/{StudentId}/modules");
+        // Swagger description
         Description(d =>
             d.Produces<Response>(200, "application/json")
         );
+        // Swagger summary
         Summary(s =>
         {
             s.Summary = "Gets all modules for student.";
