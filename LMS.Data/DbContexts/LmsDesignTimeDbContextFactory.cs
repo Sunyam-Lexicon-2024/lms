@@ -8,28 +8,26 @@ namespace LMS.Data.DbContexts
     {
         public LmsDbContext CreateDbContext(string[] args)
         {
+            var configuration = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json")
+                   .AddJsonFile("appsettings.Development.json")
+                   .Build();
 
-            string? env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+            var optionsBuilder = new DbContextOptionsBuilder<LmsDbContext>();
 
-            var configurationBuilder = new ConfigurationBuilder()
-                   .SetBasePath(Directory.GetCurrentDirectory());
+            // set CONTAINER_ENV=true in your local environment to use a container/unix compatible connection string
+            string? container = Environment.GetEnvironmentVariable("CONTAINER_ENV");
+            string? connectionString;
 
-            if (env is not null && env == "DevContainers")
+            if (container is not null)
             {
-                configurationBuilder
-                   .AddJsonFile("appsettings.DevContainers.json");
+                connectionString = configuration.GetConnectionString("ContainerConnection");
             }
             else
             {
-                configurationBuilder
-                   .AddJsonFile("appsettings.json")
-                   .AddJsonFile("appsettings.Development.json");
+                connectionString = configuration.GetConnectionString("DefaultConnection");
             }
-
-            var configuration = configurationBuilder.Build();
-
-            var optionsBuilder = new DbContextOptionsBuilder<LmsDbContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             optionsBuilder.UseSqlite(connectionString);
 
