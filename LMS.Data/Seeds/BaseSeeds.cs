@@ -11,7 +11,7 @@ public class BaseSeeds(LmsDbContext context)
     private readonly List<User> _users = [];
     private readonly List<Course> _courses = [];
     private readonly List<Module> _modules = [];
-    private readonly List<Activity> _activities = [];
+    private readonly List<ModuleActivity> _activities = [];
 
     private readonly LmsDbContext _context = context;
     private readonly Faker _faker = new();
@@ -96,7 +96,7 @@ public class BaseSeeds(LmsDbContext context)
         {
             for (int i = 0; i < count; i++)
             {
-                Activity activityToAdd = new()
+                ModuleActivity activityToAdd = new()
                 {
                     Name = $"{module.Name}-Activity-{i + 1}",
                     StartDate = DateOnly.FromDateTime(DateTime.Now),
