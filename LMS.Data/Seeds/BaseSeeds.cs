@@ -64,12 +64,12 @@ public class BaseSeeds(LmsDbContext context)
     private async Task GenerateModules(int count)
     {
         var courses = _context.CourseElements.OfType<Course>().ToList();
-        var course = _faker.PickRandom(courses);
 
         await Task.Run(() =>
         {
             for (int i = 0; i < count; i++)
             {
+                var course = _faker.PickRandom(courses);
                 Module moduleToAdd = new()
                 {
                     Name = $"{course.Name}-Module-{i + 1}",
