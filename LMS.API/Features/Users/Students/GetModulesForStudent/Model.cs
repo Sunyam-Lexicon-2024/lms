@@ -2,7 +2,7 @@ namespace Users.Students.GetModulesForStudent;
 
 public class Request
 {
-    public int StudentId { get; set; }
+    public string StudentId { get; set; }
 }
 
 public class Response

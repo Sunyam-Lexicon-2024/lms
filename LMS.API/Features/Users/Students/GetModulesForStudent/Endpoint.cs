@@ -14,7 +14,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         {
             s.Summary = "Gets all modules for student.";
             s.Description = "Gets all modules for a specific student (lookup on the students ID).";
-            s.ExampleRequest = new Request() { StudentId = 1 };
+            s.ExampleRequest = new Request() { StudentId = Guid.NewGuid().ToString("D") };
             s.ResponseExamples[200] = new Response()
             {
                 Modules = [
