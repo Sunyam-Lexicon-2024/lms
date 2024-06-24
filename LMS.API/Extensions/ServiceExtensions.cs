@@ -8,7 +8,16 @@ public static class ServiceExtensions
         services.AddFastEndpoints();
 
         services.AddDbContextFactory<LmsDbContext>(options =>
-            options.UseSqlite(config.GetConnectionString("DefaultConnection")));
+        {
+            if (Environment.GetEnvironmentVariable("CONTAINER_ENV") is not null)
+            {
+                options.UseSqlite(config.GetConnectionString("ContainerConnection"));
+            }
+            else
+            {
+                options.UseSqlite(config.GetConnectionString("DefaultConnection"));
+            }
+        });
 
         return services;
     }

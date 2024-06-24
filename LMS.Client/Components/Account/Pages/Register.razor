@@ -94,12 +94,12 @@
     [SupplyParameterFromQuery] 
     private string? UserType { get; set;}
 
-    private IEnumerable<CourseModel>? Courses { get; set; } = [];
+    private IEnumerable<CourseModel> Courses { get; set; } = [];
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     protected override async Task OnInitializedAsync() {
-        Courses = await ApiClient.GetFromJsonAsync<IEnumerable<CourseModel>>("courses/get-all-courses");
+        Courses = await ApiClient.GetFromJsonAsync<IEnumerable<CourseModel>>("courses/get-all-courses")!;
     }
 
     public async Task RegisterUser(EditContext editContext)
