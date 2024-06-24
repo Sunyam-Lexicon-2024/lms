@@ -2,14 +2,14 @@ namespace Users.Students.GetAllStudents;
 
 public class Mapper : ResponseMapper<StudentBaseModel, Student>
 {
-    public override StudentBaseModel FromEntity(Student u)
+    public override StudentBaseModel FromEntity(Student s)
     {
         return new StudentBaseModel()
         {
-            Name = u.Name,
-            Email = u.Email,
-            CourseName = u.Course?.Name ?? null,
-            DocumentCount = u.Documents.Count,
+            Name = s.Name,
+            Email = s.Email!,
+            CourseName = s.Course?.Name ?? null,
+            DocumentCount = s.Documents.Count,
         };
     }
 }
