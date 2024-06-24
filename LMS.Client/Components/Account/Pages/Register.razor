@@ -100,14 +100,14 @@
 
     private bool _apiAvailable = true;
 
-    private IEnumerable<CourseModel>? _courses = [];
+    private IEnumerable<CourseBaseModel>? _courses = [];
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     protected override async Task OnInitializedAsync() {
         try 
         {
-            _courses = await ApiClient.GetFromJsonAsync<IEnumerable<CourseModel>>("courses/get-all-courses");
+            _courses = await ApiClient.GetFromJsonAsync<IEnumerable<CourseBaseModel>>("courses/get-all-courses");
         }
         catch(Exception ) 
         {
@@ -216,9 +216,5 @@
         public int? CourseId { get; set; }
     }
 
-    private class CourseModel
-    {
-        public int? CourseId { get; set; } = default!;
-        public string? Name { get; set; } = default!;
-    }
+   
 }

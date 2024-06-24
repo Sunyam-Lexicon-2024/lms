@@ -48,6 +48,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         var student = await context.Users.OfType<Student>()
                                         .FirstOrDefaultAsync(s => s.Id == req.StudentId, ct);
 
+
         var course = await context.CourseElements.OfType<Course>()
                                                 .Include(c => c.Modules)
                                                 .FirstOrDefaultAsync(ce => ce.Id == student.CourseId, ct);
@@ -60,6 +61,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         {
             moduleModels = modules.Select(Map.FromEntity).ToList();
         }
+
 
         await SendAsync(new()
         {
