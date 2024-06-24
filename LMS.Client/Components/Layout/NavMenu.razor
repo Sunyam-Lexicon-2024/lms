@@ -1,91 +1,46 @@
-﻿<nav class="navbar navbar-expand-md navbar-light bg-light">
-    <div class="container-xl">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿
+<div class="px-3 py-2 border-bottom mb-3 bg-light">
+    <div class="container d-flex flex-wrap justify-content-center">
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
+            <div class="container-xl">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-        <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                                Home
+                            </NavLink>
+                        </li>
 
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
+                        <AuthorizeView>
+                            <Authorized>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                                        [Authorized example link]
+                                    </NavLink>
+                                </li>
+                            </Authorized>
+                            <NotAuthorized>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="Account/Register?UserType=Student">
+                                        Register as student
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="Account/Register?UserType=Teacher">
+                                        Register as teather
+                                    </NavLink>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </ul>
                 </div>
-                <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
-                    </form>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-    </nav>
+            </div>
+        </nav>
+    </div>
 </div>
 
-@code {
-    private string? currentUrl;
-
-    protected override void OnInitialized()
-    {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-        NavigationManager.LocationChanged += OnLocationChanged;
-    }
-
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
-        StateHasChanged();
-    }
-
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= OnLocationChanged;
-    }
-}
-
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                        Home
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="counter">
-                        Counter
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="weather">
-                        Weather
-                    </NavLink>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>

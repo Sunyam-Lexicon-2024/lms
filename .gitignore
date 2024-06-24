@@ -2,15 +2,16 @@
 obj/
 bin/
 
-# SQL
+# SQL / Database
 *.sql
 *.db
+*.db-shm
+*.db-wal
 
 # Visual studio
 .vs
 *.user
+*.sln
 
 # Git
 .gitignore
-/LMS.Data/Data/app.db-shm
-/LMS.Data/Data/app.db-wal
