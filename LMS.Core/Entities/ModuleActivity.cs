@@ -1,6 +1,6 @@
 namespace LMS.Core.Entities;
 
-public class Activity : CourseElement
+public class ModuleActivity : CourseElement
 {
     public ActivityType Type {get;set;}
 }

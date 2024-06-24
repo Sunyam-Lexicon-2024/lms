@@ -2,8 +2,9 @@
 obj/
 bin/
 
-# SQL Queries
+# SQL
 *.sql
+*.db
 
 # Visual studio
 .vs
@@ -11,3 +12,5 @@ bin/
 
 # Git
 .gitignore
+/LMS.Data/Data/app.db-shm
+/LMS.Data/Data/app.db-wal

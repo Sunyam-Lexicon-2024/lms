@@ -1,6 +1,7 @@
-using Lms.Data.DbContexts;
+using LMS.Data.DbContexts;
 using LMS.Core.Entities;
 using Bogus;
+using Microsoft.AspNetCore.Identity;
 
 namespace LMS.Data.Seeds;
 
@@ -60,13 +61,23 @@ public class BaseSeeds(LmsDbContext context)
                 string first = _faker.Name.FirstName();
                 string last = _faker.Name.LastName();
                 string domain = _faker.Internet.DomainName();
+                string email = $"{first}.{last}@{domain}";
+                var password = new PasswordHasher<Teacher>();
                 Teacher teacherToAdd = new()
                 {
                     Name = $"{first} {last}",
-                    Email = $"{first.ToLower()}.{last.ToLower()}@lms-school.com",
-                    Password = _faker.Internet.Password(),
+                    Email = email.ToLower(),
+                    NormalizedEmail = email.ToUpper(),
+                    UserName = email.ToLower(),
+                    NormalizedUserName = email.ToUpper(),
+                    EmailConfirmed = true,
+                    PhoneNumber = _faker.Phone.PhoneNumber(),
+                    PhoneNumberConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
                 };
                 teacherToAdd.Courses.Add(_faker.PickRandom(courses));
+                var hashed = password.HashPassword(teacherToAdd, "secret");
+                teacherToAdd.PasswordHash = hashed;
                 _users.Add(teacherToAdd);
             }
         });
@@ -82,15 +93,25 @@ public class BaseSeeds(LmsDbContext context)
                 string first = _faker.Name.FirstName();
                 string last = _faker.Name.LastName();
                 string domain = _faker.Internet.DomainName();
+                string email = $"{first}.{last}@{domain}";
+                var password = new PasswordHasher<Student>();
                 Course course = _faker.PickRandom(courses);
                 Student studentToAdd = new()
                 {
                     Name = $"{first} {last}",
-                    Email = $"{first}.{last}@{domain}",
-                    Password = _faker.Internet.Password(),
+                    Email = email.ToLower(),
+                    NormalizedEmail = email.ToUpper(),
+                    UserName = email.ToLower(),
+                    NormalizedUserName = email.ToUpper(),
+                    EmailConfirmed = true,
+                    PhoneNumber = _faker.Phone.PhoneNumber(),
+                    PhoneNumberConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
                     CourseId = course.Id,
                     Course = course
                 };
+                var hashed = password.HashPassword(studentToAdd, "secret");
+                studentToAdd.PasswordHash = hashed;
                 _users.Add(studentToAdd);
             }
         });
