@@ -9,11 +9,24 @@ namespace LMS.Data.DbContexts
         public LmsDbContext CreateDbContext(string[] args)
         {
 
-            var configuration = new ConfigurationBuilder()
-                   .SetBasePath(Directory.GetCurrentDirectory())
+            string? env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+
+            var configurationBuilder = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory());
+
+            if (env is not null && env == "DevContainers")
+            {
+                configurationBuilder
+                   .AddJsonFile("appsettings.DevContainers.json");
+            }
+            else
+            {
+                configurationBuilder
                    .AddJsonFile("appsettings.json")
-                   .AddJsonFile("appsettings.Development.json")
-                   .Build();
+                   .AddJsonFile("appsettings.Development.json");
+            }
+
+            var configuration = configurationBuilder.Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<LmsDbContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
