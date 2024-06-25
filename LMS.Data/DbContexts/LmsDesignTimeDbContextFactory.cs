@@ -17,10 +17,7 @@ namespace LMS.Data.DbContexts
             var optionsBuilder = new DbContextOptionsBuilder<LmsDbContext>();
 
             // set CONTAINER_ENV=true in your local environment to use a container/unix compatible connection string
-            string? container = Environment.GetEnvironmentVariable("CONTAINER_ENV");
-            string? connectionString;
-
-            if (container is not null)
+            if (Environment.GetEnvironmentVariable("CONTAINER_ENV") is not null)
             {
                 connectionString = configuration.GetConnectionString("ContainerConnection");
             }
