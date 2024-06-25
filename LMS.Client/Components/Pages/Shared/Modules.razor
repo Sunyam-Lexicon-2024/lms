@@ -1,19 +1,53 @@
 @inject HttpClient ApiClient
 @inject UserManager<User> UserManager
 
-<ul>
-    @if (_modules.Any())
+<div class="accordion" id="accordionExample">
+    @if (!_apiAvailable)
     {
-        @foreach (var m in _modules)
-        {
-            <li>@m.Name [@m.StartDate - @m.EndDate] </li>
-        }
+        <div class="alert alert-danger" role="alert">API not available</div>
     }
     else
     {
-        <div class="alert alert-primary" role="alert">No courses available</div>
+        if (_dataLoaded)
+        {
+            if (_modules.Any())
+            {
+                @foreach (var m in _modules)
+                {
+                    <div class="accordion-item">
+                        <h2>
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@m.Name"
+                                aria-expanded="true" aria-controls="collapseOne">
+                                <span><strong>Module</strong> @m.Name</span>
+                            </button>
+                        </h2>
+                        <div id="@m.Name" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body d-flex flex-column">
+                                <div>
+                                    <strong>Start:</strong> @m.StartDate
+                                </div>
+                                <div>
+                                    <strong>End:</strong> @m.EndDate
+                                </div>
+                                <div>
+                                    <a href="#">Module details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-primary" role="alert">No courses available</div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">Loading...</div>
+        }
     }
-</ul>
+</div>
 
 
 @code {
@@ -22,6 +56,9 @@
 
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
+
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,10 +74,11 @@
                 {
                     var response = await ApiClient.GetFromJsonAsync<ModuleData>($"users/students/{targetUser.Id}/modules")!;
                     _modules = response!.Modules!;
+                    _dataLoaded = true;
                 }
                 catch
                 {
-                    _modules = [];
+                    _apiAvailable = false;
                 }
             }
         }
