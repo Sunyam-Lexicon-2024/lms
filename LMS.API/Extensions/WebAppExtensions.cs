@@ -8,7 +8,7 @@ public static class WebAppExtensions
     {
         app.UseDefaultExceptionHandler();
 
-        if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DevContainers")
+        if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
 
