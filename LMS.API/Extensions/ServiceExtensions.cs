@@ -24,6 +24,9 @@ public static class ServiceExtensions
         }
 
         services.AddDbContextFactory<LmsDbContext>(options =>
+        {
+            // set CONTAINER_ENV=true in your local environment to use a container/unix compatible connection string
+            if (Environment.GetEnvironmentVariable("CONTAINER_ENV") is not null)
             {
                 if (Environment.GetEnvironmentVariable("CONTAINER_ENV") is not null)
                 {
@@ -34,7 +37,7 @@ public static class ServiceExtensions
                     options.UseSqlite(config.GetConnectionString("DefaultConnection"));
                 }
             }
-        );
+        });
 
         return services;
     }

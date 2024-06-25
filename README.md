@@ -31,6 +31,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#contributors">Built With</a></li>
         <li><a href="#built-with">Built With</a></li>
         <li><a href="#assignment-document">Built With</a></li>
         <li><a href="#contributors">Built With</a></li>
@@ -57,6 +58,17 @@
 ## About The Project
 
 TBD
+
+
+### Contributors
+
+Meet the awesome team!
+
+- [Brucette](https://github.com/brucette)
+- [Hellomynameislinda](https://github.com/hellomynameislinda)
+- [MarekLuk](https://github.com/MarekLuk)
+- [Rezapp](https://github.com/rezapps)
+- [Suny-am](https://github.com/suny-am)
 
 
 
