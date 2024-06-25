@@ -3,12 +3,14 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 
 @inject SignInManager<User> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject UserManager<User> UserManager
+@inject LMS.Data.DbContexts.LmsDbContext DbContext
 
 @attribute [AllowAnonymous]
 
@@ -110,8 +112,21 @@
             if (currentUser != null)
             {
                 var currentUserId = currentUser.Id;
-            }
+                var role = await DbContext.Users.Where(u => u.Id == currentUserId)
+                .Select(u => EF.Property<string>(u, "Role"))
+                .FirstOrDefaultAsync();
 
+                switch (role.ToLower())
+                {
+                    case "student":
+                        ReturnUrl = "/Student";
+                        break;
+                    case "teacher":
+                        ReturnUrl = "/Teacher";
+                        break;
+                }
+
+            }
 
             RedirectManager.RedirectTo(ReturnUrl);
         }
