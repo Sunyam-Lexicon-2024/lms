@@ -3,21 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.API", "LMS.API\LMS.API.csproj", "{5772A4DA-1B97-4844-AA05-4F0788C6B222}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.API", "LMS.API\LMS.API.csproj", "{5772A4DA-1B97-4844-AA05-4F0788C6B222}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Data", "LMS.Data\LMS.Data.csproj", "{D9B3DA06-8577-48C8-9B7D-2DA03F8E369C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.Data", "LMS.Data\LMS.Data.csproj", "{D9B3DA06-8577-48C8-9B7D-2DA03F8E369C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Core", "LMS.Core\LMS.Core.csproj", "{935DC02E-D21C-4CE9-8649-3385F493DE2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.Core", "LMS.Core\LMS.Core.csproj", "{935DC02E-D21C-4CE9-8649-3385F493DE2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Client", "LMS.Client\LMS.Client.csproj", "{6091BCDD-3011-4ADE-9E0C-8BB1C8B047B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.Client", "LMS.Client\LMS.Client.csproj", "{6091BCDD-3011-4ADE-9E0C-8BB1C8B047B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5772A4DA-1B97-4844-AA05-4F0788C6B222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -36,5 +33,8 @@ Global
 		{6091BCDD-3011-4ADE-9E0C-8BB1C8B047B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6091BCDD-3011-4ADE-9E0C-8BB1C8B047B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6091BCDD-3011-4ADE-9E0C-8BB1C8B047B7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

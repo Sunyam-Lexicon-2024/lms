@@ -1,0 +1,78 @@
+﻿@using System.Security.Claims
+@inject HttpClient ApiClient
+@inject UserManager<User> UserManager
+
+<h3>Current Course for student @targetUser?.Name</h3>
+<h3>Current Course for student @targetUser?.Id</h3>
+
+<div>
+    @if (!_apiAvailable)
+    {
+        <div class="alert alert-danger" role="alert">API not available</div>
+    }
+    else
+    {
+        if (_dataLoaded)
+        {
+            if (_studentCourse is not null)
+            {
+                <p>Course Name: @_studentCourse.Name</p>
+                <p>Start Date: @_studentCourse.StartDate</p>
+                <p>End Date: @_studentCourse.EndDate</p>
+            }
+            else
+            {
+                <div class="alert alert-primary" role="alert">No courses available</div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">Loading...</div>
+        }
+    }
+</div>
+
+
+@code {
+    AuthenticationState? authState;
+    ClaimsPrincipal? user;
+    User? targetUser;
+
+    private StudentCourseBaseModel? _studentCourse;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            authState = await authenticationState;
+            user = authState.User;
+            targetUser = await UserManager.GetUserAsync(user);
+
+            if (targetUser is not null)
+            {
+                try
+                {
+                    var response = await ApiClient.GetFromJsonAsync<StudentCourseBaseModel>($"users/students/{targetUser.Id}/course")!;
+                    _studentCourse = response!;
+                    Console.WriteLine($"response is: {response}");
+                    _dataLoaded = true;
+
+                    //var responseMessage = await ApiClient.GetAsync($"users/students/{targetUser.Id}/course");
+                    //var responseBody = await response.Content.ReadAsStringAsync();
+                    //Console.WriteLine($"API Response: {responseBody}");
+
+                }
+                catch
+                {
+                    _apiAvailable = false;
+                }
+            }
+        }
+    }
+}
