@@ -13,7 +13,7 @@ public static class ServiceExtensions
                 {
                     o.DocumentSettings = s =>
                     {
-                        s.Title = "Logistics Management System API";
+                        s.Title = "Learning Management System API";
                         s.Version = "v1";
                     };
                 });
