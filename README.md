@@ -62,8 +62,7 @@ TBD
 
 ### Contributors
 
-Meet the awesome team!
-
+*Meet the awesome team!*
 
 **[@Brucette](https://github.com/brucette)**
 
@@ -77,24 +76,18 @@ Meet the awesome team!
 
 
 
+### Assignment Document
+
+[Assignment 17 PDF](.docs/pdf/assignment-document-17-final-project.pdf)
+
+
+
 ### Built With
 
 [![.NET][.NET]][.NET-url]
 [![Blazor][Blazor]][Blazor-url]
 [![Podman][Podman]][Podman-url]
 [![Docker][Docker]][Docker-url]
-
-
-
-### Assignment Document
-
-[TBD](.tbd)
-
-
-
-### Contributors
-
-TBD
 
 <p align="right"><a href="#readme-top">🔝</a></p>
 
@@ -137,14 +130,14 @@ has been tested with this template setup.
 #### Dockerfile
    ```sh
    # Podman is interchangable with Docker
-   docker build -t my-app .
-   docker run my-app -d
-   docker exec -it -w workspace my-app bash
+   docker build -t lms-app .
+   docker run lms-app -d
+   docker exec -it -w workspace lms-app zsh
    ```
 #### Docker Compose
    ```sh
    docker-compose up -d
-   docker exec -it -w workspace app-1
+   docker exec -it -w workspace lms-app zsh
    ```
 #### VS Code Dev Containers extension
 Simply enter select the `Dev Containers: Open Folder in Container...` option in the command palette and select the directory where the .devcontainer file resides. 
@@ -160,7 +153,7 @@ Don't forget to give the project a star! Thanks again!
 #### 1. Fork the Project
 ```sh
 gh repo fork sunyam-lexicon-2024/lms --clone
-cd dotnet-container-dev-env-starter
+cd lms
 ```
 #### 2. Create your Feature Branch 
 ```sh
@@ -197,9 +190,29 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature1
-- [ ] Feature2
-- [ ] Feature3
+- [ ] Blazor Interactive Server Web Client
+  - [x] ASP.NET Core Identity integration
+  - [ ] Custom Theming
+  - [x] Student dashboard
+    - [ ] Course info
+    - [x] Course Modules info
+    - [ ] Course module activites info
+  - [ ] Teacher dashbord
+    - [ ] WIP 
+- [ ] FastEndpoints API
+  - [ ] Student Endpoints
+    - [x] Get All Students
+  - [ ] Teacher Endpoints
+  - [ ] Course Endpoints
+    - [x] Get Course Modules
+    - [ ] WIP 
+- [x] Data Modeling
+  - [x] Entity Framework SQLite connection
+  - [x] Entity Classes
+  - [x] ASP.NET Core Identity integration
+  - [x] Entity Configurations 
+  - [x] Data seeds
+  - [ ] WIP 
 
 See the [open issues](https://github.com/sunyam-lexicon-2024/lms/issues) for a full list of proposed features (and known issues).
 
