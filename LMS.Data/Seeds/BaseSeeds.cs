@@ -39,9 +39,11 @@ public class BaseSeeds(LmsDbContext context)
         {
             for (int i = 0; i < count; i++)
             {
+                var coursenumber= i + 1
                 Course courseToAdd = new()
                 {
-                    Name = $"Course-{i + 1}",
+                    Name = $"Course-{coursenumber}",
+                    Description: $"Course-{coursenumber} description",
                     StartDate = DateOnly.FromDateTime(DateTime.Now),
                     EndDate = DateOnly.FromDateTime(DateTime.Now.AddYears(1))
                 };
