@@ -57,7 +57,11 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-TBD
+A small application that enables the registration of students and teachers, as well as the management of courses and their related modules
+and acitivites.
+
+The goal of the assignment is to create a blazor based frontend that consumes a external API; allowing for the students to work with and learn about
+the core functionalities and aspects that governs Blazor application development and use.
 
 
 ### Contributors
