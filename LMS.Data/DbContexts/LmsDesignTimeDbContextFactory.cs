@@ -19,14 +19,12 @@ namespace LMS.Data.DbContexts
             // set CONTAINER_ENV=true in your local environment to use a container/unix compatible connection string
             if (Environment.GetEnvironmentVariable("CONTAINER_ENV") is not null)
             {
-                connectionString = configuration.GetConnectionString("ContainerConnection");
+                optionsBuilder.UseSqlite(configuration.GetConnectionString("ContainerConnection"));
             }
             else
             {
-                connectionString = configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
             }
-
-            optionsBuilder.UseSqlite(connectionString);
 
             return new LmsDbContext(optionsBuilder.Options);
         }
