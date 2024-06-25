@@ -1,10 +1,10 @@
-namespace Users.Students.GetModulesForStudent;
+namespace Courses.GetCourseModules;
 
 public class Endpoint : Endpoint<Request, Response, Mapper>
 {
     public override void Configure()
     {
-        Get("/users/students/{StudentId}/modules");
+        Get("/courses/{CourseId}/modules");
         // Swagger description
         Description(d =>
             d.Produces<Response>(200, "application/json")
@@ -12,9 +12,9 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         // Swagger summary
         Summary(s =>
         {
-            s.Summary = "Gets all modules for student.";
-            s.Description = "Gets all modules for a specific student (lookup on the students ID).";
-            s.ExampleRequest = new Request() { StudentId = Guid.NewGuid().ToString("D") };
+            s.Summary = "Gets all modules for course.";
+            s.Description = "Gets all modules for a specific course (lookup on the course ID).";
+            s.ExampleRequest = new Request() { CourseId = 1 };
             s.ResponseExamples[200] = new Response()
             {
                 Modules = [
@@ -45,13 +45,9 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         }
 
         using var context = contextFactory.CreateDbContext();
-        var student = await context.Users.OfType<Student>()
-                                        .FirstOrDefaultAsync(s => s.Id == req.StudentId, ct);
-
-
         var course = await context.CourseElements.OfType<Course>()
-                                                .Include(c => c.Modules)
-                                                .FirstOrDefaultAsync(ce => ce.Id == student.CourseId, ct);
+                                        .Include(c => c.Modules)
+                                        .FirstOrDefaultAsync(c => c.Id == req.CourseId, ct);
 
         var modules = course.Modules;
 
@@ -61,7 +57,6 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         {
             moduleModels = modules.Select(Map.FromEntity).ToList();
         }
-
 
         await SendAsync(new()
         {

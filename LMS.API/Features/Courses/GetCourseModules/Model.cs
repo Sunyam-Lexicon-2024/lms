@@ -1,8 +1,8 @@
-namespace Users.Students.GetModulesForStudent;
+namespace Courses.GetCourseModules;
 
 public class Request
 {
-    public string StudentId { get; set; }
+    public int CourseId { get; set; }
 }
 
 public class Response

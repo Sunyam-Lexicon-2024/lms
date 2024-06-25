@@ -1,4 +1,4 @@
-namespace Users.Students.GetModulesForStudent;
+namespace Courses.GetCourseModules;
 
 public class Mapper : ResponseMapper<ModuleModel, Module>
 {
