@@ -64,11 +64,16 @@ TBD
 
 Meet the awesome team!
 
-- [Brucette](https://github.com/brucette)
-- [Hellomynameislinda](https://github.com/hellomynameislinda)
-- [MarekLuk](https://github.com/MarekLuk)
-- [Rezapp](https://github.com/rezapps)
-- [Suny-am](https://github.com/suny-am)
+
+**[@Brucette](https://github.com/brucette)**
+
+**[@Hellomynameislinda](https://github.com/hellomynameislinda)**
+
+**[@MarekLuk](https://github.com/MarekLuk)**
+
+**[@Rezapp](https://github.com/rezapps)**
+
+**[@Suny-am](https://github.com/suny-am)**
 
 
 
