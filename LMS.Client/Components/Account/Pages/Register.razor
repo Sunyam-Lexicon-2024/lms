@@ -58,7 +58,7 @@
                 {
                     <div class="alert alert-danger" role="alert">API not available</div>
                 }
-                else if(_courses!.Count() > 0) 
+                else if(_courses is not null && _courses.Count() > 0) 
                 {
                     <div class="form-floating mb-3">
                         <InputSelect @bind-Value="@Input.CourseId" class="form-control">
