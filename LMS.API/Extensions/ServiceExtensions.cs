@@ -6,7 +6,7 @@ public static class ServiceExtensions
     public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration config, IHostEnvironment env)
     {
 
-        if (env.IsDevelopment() || env.EnvironmentName == "DevContainers")
+        if (env.IsDevelopment())
         {
             services.AddFastEndpoints()
                     .SwaggerDocument(o =>

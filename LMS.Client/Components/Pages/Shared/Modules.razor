@@ -1,5 +1,4 @@
 @inject HttpClient ApiClient
-@inject UserManager<User> UserManager
 
 <div class="accordion" id="accordionExample">
     @if (!_apiAvailable)
@@ -54,33 +53,23 @@
 
     private IEnumerable<ModuleBaseModel> _modules = [];
 
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
+    [Parameter]
+    public int? CourseId { get; set; }
 
     private bool _apiAvailable = true;
     private bool _dataLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
-        if (authenticationState is not null)
+        try
         {
-            var authState = await authenticationState;
-            var user = authState.User;
-            var targetUser = await UserManager.GetUserAsync(user);
-
-            if (targetUser is not null)
-            {
-                try
-                {
-                    var response = await ApiClient.GetFromJsonAsync<ModuleData>($"users/students/{targetUser.Id}/modules")!;
-                    _modules = response!.Modules!;
-                    _dataLoaded = true;
-                }
-                catch
-                {
-                    _apiAvailable = false;
-                }
-            }
+            var response = await ApiClient.GetFromJsonAsync<ModuleData>($"courses/{CourseId}/modules")!;
+            _modules = response!.Modules!;
+            _dataLoaded = true;
+        }
+        catch
+        {
+            _apiAvailable = false;
         }
     }
 
