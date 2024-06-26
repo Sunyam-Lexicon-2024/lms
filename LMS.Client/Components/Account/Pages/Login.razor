@@ -3,14 +3,12 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
-@using Microsoft.EntityFrameworkCore
 
 @inject SignInManager<User> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject UserManager<User> UserManager
-@inject LMS.Data.DbContexts.LmsDbContext DbContext
 
 @attribute [AllowAnonymous]
 
