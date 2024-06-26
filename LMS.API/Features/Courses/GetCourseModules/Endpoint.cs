@@ -21,12 +21,14 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
                     new()
                     {
                         Name = "my module",
+                        Description = "My module description",
                         StartDate = DateOnly.FromDateTime(DateTime.Today),
                         EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(15))
                     },
                     new()
                     {
                         Name = "my second module",
+                        Description = "My second module description",
                         StartDate = DateOnly.FromDateTime(DateTime.Today),
                         EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(30))
                     }

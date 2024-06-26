@@ -8,6 +8,7 @@ public class Mapper : ResponseMapper<ModuleBaseModel, Module>
         {
             ModuleId = m.Id,
             Name = m.Name,
+            Description = m.Description,
             StartDate = m.StartDate,
             EndDate = m.EndDate,
         };
