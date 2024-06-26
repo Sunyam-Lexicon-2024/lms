@@ -1,5 +1,6 @@
 @inject HttpClient ApiClient
 @inject ModalService ModalService
+@inject ILogger<Modules> Logger
 
 <div class="accordion" id="accordionExample">
     @if (!_apiAvailable)
@@ -30,7 +31,8 @@
                                     <strong>End:</strong> @m.EndDate
                                 </div>
                                 <div>
-                                    <button @onclick=@((m) => ShowModal(m))>Module Activities</button>
+                                    <button class="btn btn-primary my-2" @onclick="@((_) => ShowModal(m))">Module
+                                        Activities</button>
                                 </div>
                             </div>
                         </div>
@@ -49,8 +51,10 @@
     }
 </div>
 
-<Modal @ref="_moduleModal">
-    <ModuleActivities Activites=_moduleActivities />
+<Modal @ref="_moduleModal" Title="@_moduleModalTitle" HeaderCssClass="d-flex flex-row justify-content-between">
+    <BodyTemplate>
+        <ModuleActivities Activities=_moduleActivities />
+    </BodyTemplate>
 </Modal>
 
 @code {
@@ -64,6 +68,7 @@
     private bool _dataLoaded = false;
 
     private Modal? _moduleModal = default!;
+    private string? _moduleModalTitle;
 
     private IEnumerable<ModuleActivityBaseModel>? _moduleActivities = [];
 
@@ -83,23 +88,26 @@
 
     private async Task ShowModal(ModuleBaseModel module)
     {
-
-        IEnumerable<ModuleActivityBaseModel>? activities = [];
-
         try
         {
             _moduleActivities = await ApiClient
             .GetFromJsonAsync<IEnumerable<ModuleActivityBaseModel>>($"courses/modules/{module.ModuleId}/get-all-activities");
         }
-        catch
+        catch (Exception ex)
         {
-            _moduleActivities = [];
+            _apiAvailable = false;
+            Logger.LogError("{exception}", ex);
         }
         finally
         {
-            await _moduleModal!.ShowAsync();
+            try
+            {
+                _moduleModalTitle = $"{module.Name} activities";
+                await _moduleModal!.ShowAsync();
+            }
+            catch
+            { } // needed to silence JSInterop not recognizing exited circuit
         }
-
     }
 
     private class ModuleData
