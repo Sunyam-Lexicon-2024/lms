@@ -1,40 +1,35 @@
+@using BlazorBootstrap
 @using LMS.Core.Models
 
-<div class="accordion" id="@ModuleTitle">
+<Accordion @ref="_activitiesAccordion">
     @if (Activities is not null && Activities.Any())
     {
         @foreach (var ma in Activities)
         {
-            <div class="accordion-item">
-                <h2>
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="@ma.Name" aria-expanded="true" aria-controls="@ma.Name">
-                        <span><strong>Activity</strong> @ma.Name</span>
-                    </button>
-                </h2>
-                <div id="@ma.Name" class="accordion-collapse collapse">
-                    <div class="accordion-body d-flex flex-column">
-                        <div class="accordion-item d-flex flex-row justify-content-between p-2">
-                            <div>Period</div>
-                            <div>
-                                @ma.StartDate
-                                -
-                                @ma.EndDate
-                            </div>
-                        </div>
-                        <div class="accordion-item d-flex flex-row justify-content-between p-2">
-                            @(ma.Description?.Length > 100 ? ma.Description.Substring(0, 100) : ma.Description ?? "No description available")
+            <AccordionItem>
+                <TitleTemplate>
+                    @ma.Name
+                </TitleTemplate>
+                <Content>
+                    <div class="d-flex flex-row justify-content-between">
+                        <div><strong>Period:</strong></div>
+                        <div>
+                                @ma.StartDate - @ma.EndDate
                         </div>
                     </div>
-                </div>
-            </div>
+                    <hr>
+                    <div class="mt-2">
+                            @(ma.Description?.Length > 100 ? $"{ma.Description.Substring(0, 100)}..." : ma.Description ?? "No description available")
+                    </div>
+                </Content>
+            </AccordionItem>
         }
     }
     else
     {
         <div class="alert alert-primary" role="alert">No courses available</div>
     }
-</div>
+</Accordion>
 
 @code {
 
@@ -42,5 +37,13 @@
     public IEnumerable<ModuleActivityBaseModel>? Activities { get; set; }
     
     [Parameter]
-    public string ModuleTitle {get;set;} 
+    public string? ModuleTitle {get;set;} 
+
+    private Accordion _activitiesAccordion =default!;
+    
+    public async Task Collapse() 
+    {
+       await _activitiesAccordion.HideAllAccordionItemsAsync();
+    }
+
 }

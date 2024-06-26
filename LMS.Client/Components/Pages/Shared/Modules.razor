@@ -2,80 +2,72 @@
 @inject ModalService ModalService
 @inject ILogger<Modules> Logger
 
-<div class="accordion" id="@CourseId">
-    @if (!_apiAvailable)
+<Accordion>
+@if (!_apiAvailable)
+{
+    <div class="alert alert-danger" role="alert">API not available</div>
+}
+else
+{
+    @if (_dataLoaded)
     {
-        <div class="alert alert-danger" role="alert">API not available</div>
-    }
-    else
-    {
-        if (_dataLoaded)
+        if (_modules.Any())
         {
-            if (_modules.Any())
+            @foreach (var m in _modules)
             {
-                @foreach (var m in _modules)
-                {
-                    <div class="accordion-item">
-                        <h2>
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="@m.Name"
-                                aria-expanded="true" aria-controls="@m.Name">
-                                <span><strong>Module</strong> @m.Name</span>
-                            </button>
-                        </h2>
-                        <div id="@m.Name" class="accordion-collapse collapse">
-                            <div class="accordion-body d-flex flex-column">
-                                <div class="accordion-item d-flex flex-column p-2">
-                                    <div>
-                                        <strong>Start:</strong> @m.StartDate
-                                    </div>
-                                    <div>
-                                        <strong>End:</strong> @m.EndDate
-                                    </div>
-                                </div>
-                                <div class="accordion-item d-flex flex-column p-2">
-                                    @(m.Description?.Length > 100 ? m.Description.Substring(0, 100) : m.Description ?? "No description available")
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary my-2" @onclick="@((_) => ShowModal(m))">Module
-                                        Activities</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="alert alert-primary" role="alert">No courses available</div>
+                <AccordionItem Title="@m.Name">
+                    <Content>
+                        <span><strong>Start:</strong> @m.StartDate</span>
+                        <span><strong>End:</strong> @m.EndDate</span>
+                        <div class="d-flex flex-column my-2">@(m.Description?.Length > 100 ? $"{m.Description.Substring(0, 100)}..." : m.Description ?? "No description available")</div>
+                        <button class="btn btn-primary my-2" @onclick="@((_) => ShowModal(m))">Module Activities</button>
+                    </Content>
+                </AccordionItem>
             }
         }
         else
         {
-            <div class="alert alert-primary" role="alert">Loading...</div>
+            <div class="alert alert-primary" role="alert">No courses available</div>
         }
     }
-</div>
+    else
+    {
+        <div class="alert alert-primary" role="alert">Loading...</div>
+    }
+}
+</Accordion>
 
-<Modal @ref="_moduleModal" Title="@_moduleTitle" HeaderCssClass="d-flex flex-row justify-content-between">
+<Modal 
+    @ref="_moduleModal" 
+    Title="@_moduleTitle" 
+    HeaderCssClass="d-flex flex-row justify-content-between"
+    OnHiding="OnModalHidingAsync">
     <BodyTemplate>
-        <ModuleActivities Activities="_moduleActivities" ModuleTitle="_moduleTitle" />
+        <ModuleActivities 
+            @ref="_activitiesComponent"  
+            Activities="_moduleActivities" 
+            ModuleTitle="_moduleTitle" 
+        />
     </BodyTemplate>
 </Modal>
 
 @code {
 
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
+    private IEnumerable<ModuleActivityBaseModel>? _moduleActivities = [];
     private IEnumerable<ModuleBaseModel> _modules = [];
+    private Modal? _moduleModal = default!;
+    private ModuleActivities _activitiesComponent = default!;
+    private string? _moduleTitle;
 
     [Parameter]
     public int? CourseId { get; set; }
 
-    private bool _apiAvailable = true;
-    private bool _dataLoaded = false;
-
-    private Modal? _moduleModal = default!;
-    private string? _moduleTitle;
-
-    private IEnumerable<ModuleActivityBaseModel>? _moduleActivities = [];
+    private async Task OnModalHidingAsync()
+    {
+        await _activitiesComponent.Collapse();
+    }
 
     protected override async Task OnInitializedAsync()
     {
