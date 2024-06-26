@@ -111,19 +111,37 @@
             var currentUser = await UserManager.FindByEmailAsync(Input.Email);
             if (currentUser != null)
             {
-                var currentUserId = currentUser.Id;
-                var role = await DbContext.Users.Where(u => u.Id == currentUserId)
-                .Select(u => EF.Property<string>(u, "Role"))
-                .FirstOrDefaultAsync();
+                // GETTING THE ROLE FROM DB
+                // var currentUserId = currentUser.Id;
+                // var role = await DbContext.Users.Where(u => u.Id == currentUserId)
+                // .Select(u => EF.Property<string>(u, "Role"))
+                // .FirstOrDefaultAsync();
+                //
+                // switch (role.ToLower())
+                // {
+                //     case "student":
+                //         ReturnUrl = "/Student";
+                //         break;
+                //     case "teacher":
+                //         ReturnUrl = "/Teacher";
+                //         break;
+                // }
 
-                switch (role.ToLower())
+
+                // CHECKING THE ROLE BY CLASS
+                // if (currentUser is Student student)
+                // {
+                //     ReturnUrl = "/Student";
+                // }
+                // else if (currentUser is Teacher teacher)
+                // {
+                //     ReturnUrl = "/Teacher";
+                // }
+
+
+                if (currentUser.GetType().Name != null)
                 {
-                    case "student":
-                        ReturnUrl = "/Student";
-                        break;
-                    case "teacher":
-                        ReturnUrl = "/Teacher";
-                        break;
+                    ReturnUrl = $"/{currentUser.GetType().Name}";
                 }
 
             }
