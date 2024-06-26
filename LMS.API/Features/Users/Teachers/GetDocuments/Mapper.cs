@@ -6,6 +6,7 @@ public class Mapper : ResponseMapper<DocumentBaseModel, Document>
     {
         return new DocumentBaseModel()
         {
+            Id = d.Id,
             Name = d.Name,
             Url = d.Url,
             Description = d.Description,

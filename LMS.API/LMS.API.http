@@ -1,4 +1,4 @@
-@UserId = fdfb3392-3d9a-49d1-8dd9-5263667972bd
+@UserId = db3a8aa6-df7d-4b62-8fb1-eda6195cf14a
 
 @GetDoc = http://localhost:5000/api/users/teachers/{{UserId}}/get-all-documents
 
