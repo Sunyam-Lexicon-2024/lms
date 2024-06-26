@@ -12,13 +12,18 @@
                         <span><strong>Activity</strong> @ma.Name</span>
                     </button>
                 </h2>
-                <div id="@m.Name" class="accordion-collapse collapse">
+                <div id="@ma.Name" class="accordion-collapse collapse">
                     <div class="accordion-body d-flex flex-column">
-                        <div>
-                            <strong>Start:</strong> @ma.StartDate
+                        <div class="accordion-item d-flex flex-row justify-content-between p-2">
+                            <div>Period</div>
+                            <div>
+                                @ma.StartDate
+                                -
+                                @ma.EndDate
+                            </div>
                         </div>
-                        <div>
-                            <strong>End:</strong> @ma.EndDate
+                        <div class="accordion-item d-flex flex-row justify-content-between p-2">
+                            @ma.Description
                         </div>
                     </div>
                 </div>
