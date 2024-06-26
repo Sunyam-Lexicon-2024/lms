@@ -31,6 +31,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#project-status">Project Status</a></li>
         <li><a href="#contributors">Built With</a></li>
         <li><a href="#built-with">Built With</a></li>
         <li><a href="#assignment-document">Built With</a></li>
@@ -57,18 +58,38 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-TBD
+A small application that enables the registration of students and teachers, as well as the management of courses and their related modules
+and acitivites.
+
+The goal of the assignment is to create a blazor based frontend that consumes a external API; allowing for the students to work with and learn about
+the core functionalities and aspects that governs Blazor application development and use.
+
+
+### Project Status
+
+[![BuildAndTest](https://github.com/Sunyam-Lexicon-2024/lms/actions/workflows/build_test.yml/badge.svg)](https://github.com/Sunyam-Lexicon-2024/lms/actions/workflows/build_test.yml)
+[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B45338%2Fgithub.com%2FSunyam-Lexicon-2024%2Flms.svg?type=shield&issueType=license)](https://app.fossa.com/projects/custom%2B45338%2Fgithub.com%2FSunyam-Lexicon-2024%2Flms?ref=badge_shield&issueType=license)
 
 
 ### Contributors
 
-Meet the awesome team!
+*Meet the awesome team!*
 
-- [Brucette](https://github.com/brucette)
-- [Hellomynameislinda](https://github.com/hellomynameislinda)
-- [MarekLuk](https://github.com/MarekLuk)
-- [Rezapp](https://github.com/rezapps)
-- [Suny-am](https://github.com/suny-am)
+**[@Brucette](https://github.com/brucette)**
+
+**[@Hellomynameislinda](https://github.com/hellomynameislinda)**
+
+**[@MarekLuk](https://github.com/MarekLuk)**
+
+**[@Rezapp](https://github.com/rezapps)**
+
+**[@Suny-am](https://github.com/suny-am)**
+
+
+
+### Assignment Document
+
+[Assignment 17 PDF](.docs/pdf/assignment-document-17-final-project.pdf)
 
 
 
@@ -78,18 +99,6 @@ Meet the awesome team!
 [![Blazor][Blazor]][Blazor-url]
 [![Podman][Podman]][Podman-url]
 [![Docker][Docker]][Docker-url]
-
-
-
-### Assignment Document
-
-[TBD](.tbd)
-
-
-
-### Contributors
-
-TBD
 
 <p align="right"><a href="#readme-top">🔝</a></p>
 
@@ -132,14 +141,14 @@ has been tested with this template setup.
 #### Dockerfile
    ```sh
    # Podman is interchangable with Docker
-   docker build -t my-app .
-   docker run my-app -d
-   docker exec -it -w workspace my-app bash
+   docker build -t lms-app .
+   docker run lms-app -d
+   docker exec -it -w workspace lms-app zsh
    ```
 #### Docker Compose
    ```sh
    docker-compose up -d
-   docker exec -it -w workspace app-1
+   docker exec -it -w workspace lms-app zsh
    ```
 #### VS Code Dev Containers extension
 Simply enter select the `Dev Containers: Open Folder in Container...` option in the command palette and select the directory where the .devcontainer file resides. 
@@ -155,7 +164,7 @@ Don't forget to give the project a star! Thanks again!
 #### 1. Fork the Project
 ```sh
 gh repo fork sunyam-lexicon-2024/lms --clone
-cd dotnet-container-dev-env-starter
+cd lms
 ```
 #### 2. Create your Feature Branch 
 ```sh
@@ -192,9 +201,29 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature1
-- [ ] Feature2
-- [ ] Feature3
+- [ ] Blazor Interactive Server Web Client
+  - [x] ASP.NET Core Identity integration
+  - [ ] Custom Theming
+  - [x] Student dashboard
+    - [ ] Course info
+    - [x] Course Modules info
+    - [ ] Course module activites info
+  - [ ] Teacher dashbord
+    - [ ] WIP 
+- [ ] FastEndpoints API
+  - [ ] Student Endpoints
+    - [x] Get All Students
+  - [ ] Teacher Endpoints
+  - [ ] Course Endpoints
+    - [x] Get Course Modules
+    - [ ] WIP 
+- [x] Data Modeling
+  - [x] Entity Framework SQLite connection
+  - [x] Entity Classes
+  - [x] ASP.NET Core Identity integration
+  - [x] Entity Configurations 
+  - [x] Data seeds
+  - [ ] WIP 
 
 See the [open issues](https://github.com/sunyam-lexicon-2024/lms/issues) for a full list of proposed features (and known issues).
 
