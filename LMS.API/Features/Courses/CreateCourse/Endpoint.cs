@@ -23,9 +23,10 @@ public class Endpoint : Endpoint<CoursePostModel, IEnumerable<CourseModel>, Mapp
 
         using var context = contextFactory.CreateDbContext();
 
-        var newCourse = Map.ToEntity();
+        var newCourse = Map.ToEntity(request);
 
         context.CourseElements.Add(newCourse);
+        await context.SaveChangesAsync();
 
         courses = await context.CourseElements.OfType<Course>()
                                                .ToListAsync(ct);

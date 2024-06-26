@@ -2,9 +2,9 @@ namespace Courses.CreateCourse;
 
 public class Mapper : Mapper<CoursePostModel, CourseModel, Course>
 {
-    public override CoursePostModel ToEntity(Course c)
+    public override Course ToEntity(CoursePostModel c)
     {
-        return new CoursePostModel()
+        return new Course()
         {
             Name = c.Name,
             StartDate = c.StartDate,
