@@ -8,9 +8,9 @@ public class Mapper : ResponseMapper<StudentCourseBaseModel, CourseElement>
     {
         return new StudentCourseBaseModel()
         {
-            Name = ce.Name
-            //StartDate = ce.StartDate,
-            //EndDate = ce.EndDate,
+            Name = ce.Name,
+            StartDate = ce.StartDate,
+            EndDate = ce.EndDate,
         };
     }
 }

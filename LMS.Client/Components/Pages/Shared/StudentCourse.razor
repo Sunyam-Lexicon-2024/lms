@@ -13,7 +13,12 @@
         {
             @if (_studentCourse is not null)
             {
-                <p>Course Name: @_studentCourse.Name</p>
+                <h2>Current Course</h2>
+
+                <div class="d-block p-2 bg-secondary text-white">
+                    <p><strong>@_studentCourse.Name</strong></p>
+                    <strong>Duration:</strong> @_studentCourse.StartDate - @_studentCourse.EndDate
+                </div>
             }
             else
             {

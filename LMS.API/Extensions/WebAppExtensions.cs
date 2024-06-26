@@ -20,10 +20,10 @@ public static class WebAppExtensions
         {
             app.UseDeveloperExceptionPage();
 
-            if (Environment.GetEnvironmentVariable("SEED_DATA") == "1")
-            {
-                await app.SeedDataAsync();
-            }
+            //if (Environment.GetEnvironmentVariable("SEED_DATA") == "1")
+            //{
+            //    await app.SeedDataAsync();
+            //}
         }
 
         return app;
