@@ -22,8 +22,10 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         var student = await context.Users.OfType<Student>()
             .FirstOrDefaultAsync(s => s.Id == req.StudentId, ct);
 
-        var course = await context.CourseElements.OfType<Course>()
-            .FirstOrDefaultAsync(ce => ce.Id == student.CourseId, ct);
+        //var course = await context.CourseElements.OfType<Course>()
+        //.FirstOrDefaultAsync(ce => ce.Id == student.CourseId, ct);
+
+        var course = await context.CourseElements.FindAsync(student.CourseId);
 
         if (course is null)
         {
@@ -31,7 +33,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
             return; // Ensure method exits if there's an error
         }
 
-        CourseModel studentCourse = Map.FromEntity(course);
+        var studentCourse = Map.FromEntity(course);
 
         await SendAsync(new()
         {
