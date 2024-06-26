@@ -14,7 +14,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/sunyam-lexicon-2024/lms">
-    <img src=".docs/images/logo.png" alt="Logo" width="80" height="80">
+    <img src=".docs/images/logo.png" alt="Logo" height="360">
   </a>
 
 <h3 align="center"> LMS Application</h3>
