@@ -1,6 +1,6 @@
 @using LMS.Core.Models
 
-<div class="accordion" id="accordionExample">
+<div class="accordion" id="@ModuleTitle">
     @if (Activities is not null && Activities.Any())
     {
         @foreach (var ma in Activities)
@@ -8,7 +8,7 @@
             <div class="accordion-item">
                 <h2>
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#@ma.Name" aria-expanded="true" aria-controls="collapseOne">
+                        data-bs-target="@ma.Name" aria-expanded="true" aria-controls="@ma.Name">
                         <span><strong>Activity</strong> @ma.Name</span>
                     </button>
                 </h2>
@@ -40,4 +40,7 @@
 
     [Parameter]
     public IEnumerable<ModuleActivityBaseModel>? Activities { get; set; }
+    
+    [Parameter]
+    public string ModuleTitle {get;set;} 
 }
