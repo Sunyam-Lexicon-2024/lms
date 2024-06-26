@@ -51,7 +51,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
         var modules = course.Modules;
 
-        IEnumerable<ModuleModel> moduleModels = [];
+        IEnumerable<ModuleBaseModel> moduleModels = [];
 
         if (modules is not null)
         {

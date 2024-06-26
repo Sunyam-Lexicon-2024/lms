@@ -2,25 +2,25 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Courses.Modules.GetModuleActivities;
 
-public class Endpoint : Endpoint<Request, Results<Ok<Response>, NotFound, NoContent>, Mapper>
+public class Endpoint : Endpoint<
+    Request,
+    Results<Ok<IEnumerable<ModuleActivityBaseModel>>, NotFound, NoContent>,
+    Mapper>
 {
 
     public override void Configure()
     {
-        Get("/courses/modules/{ModuleId}/get-all-courses");
-          Description(d =>
-            d.Produces<Response>(200, "application/json")
-        );
+        Get("/courses/modules/{ModuleId}/get-all-activities");
+        Description(d =>
+          d.Produces<IEnumerable<ModuleActivityBaseModel>>(200, "application/json")
+      );
         // Swagger summary
         Summary(s =>
         {
             s.Summary = "Gets all module activities.";
             s.Description = "Gets all actitvities for a specific module (lookup on the module ID).";
             s.ExampleRequest = new Request() { ModuleId = 1 };
-            s.ResponseExamples[200] = new Response()
-            {
-                CourseId = 1,
-                ModuleActivities = [
+            s.ResponseExamples[200] = new List<ModuleActivityBaseModel> {
                     new()
                     {
                         Name = "My module",
@@ -35,12 +35,15 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, NotFound, NoCont
                         StartDate = DateOnly.FromDateTime(DateTime.Today.AddDays(15)),
                         EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(30))
                     }
-                ]
             };
         });
     }
 
-    public override async Task<Results<Ok<Response>, NotFound, NoContent>> ExecuteAsync(Request req, CancellationToken ct)
+    public override async Task<
+        Results<Ok<IEnumerable<ModuleActivityBaseModel>>,
+        NotFound,
+        NoContent>>
+        ExecuteAsync(Request req, CancellationToken ct)
     {
         IDbContextFactory<LmsDbContext>? contextFactory = TryResolve<IDbContextFactory<LmsDbContext>>();
 
@@ -68,10 +71,6 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, NotFound, NoCont
 
         var activityModels = module.Activities.Select(Map.FromEntity);
 
-        return TypedResults.Ok<Response>(new()
-        {
-            CourseId = module.Parent.Id,
-            ModuleActivities = activityModels,
-        });
+        return TypedResults.Ok(activityModels);
     }
 }
