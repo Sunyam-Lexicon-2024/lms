@@ -22,4 +22,8 @@
     <ProjectReference Include="..\LMS.Data\LMS.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Components\Pages\Shared\StudentCourse.razor" />
+  </ItemGroup>
+
 </Project>
