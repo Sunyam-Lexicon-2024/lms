@@ -5,6 +5,22 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
     public override void Configure()
     {
         Get("/users/students/{StudentId}/course");
+
+        Description(d =>
+         d.Produces<Response>(200, "application/json")
+     );
+        // Swagger summary
+        Summary(s =>
+        {
+            s.Summary = "Gets course for student";
+            s.Description = "Gets the course for an authenticate student";
+            s.ResponseExamples[200] = new StudentCourseBaseModel()
+            {
+                        Name = "my course",
+                        StartDate = DateOnly.FromDateTime(DateTime.Now),
+                        EndDate = DateOnly.FromDateTime(DateTime.Now.AddYears(1))
+            };
+        });
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
@@ -21,9 +37,6 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
         var student = await context.Users.OfType<Student>()
             .FirstOrDefaultAsync(s => s.Id == req.StudentId, ct);
-
-        //var course = await context.CourseElements.OfType<Course>()
-        //.FirstOrDefaultAsync(ce => ce.Id == student.CourseId, ct);
 
         var course = await context.CourseElements.FindAsync(student.CourseId);
 
