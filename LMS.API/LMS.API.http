@@ -1,6 +1,19 @@
+@Base = http://localhost:5000/api/users/teachers
+
 @UserId = db3a8aa6-df7d-4b62-8fb1-eda6195cf14a
 
-@GetDoc = http://localhost:5000/api/users/teachers/{{UserId}}/get-all-documents
+# Get All Documents for teacher with Id
+@GetDoc = {{Base}}/{{UserId}}/get-all-documents
 
 GET {{GetDoc}}
+Accept: application/json
+
+###
+
+# Get Document by Id for teacher with Id
+
+@DocId = 2
+@GetDocById = {{Base}}/{{UserId}}/get-document-by-id/{{DocId}}
+
+GEt {{GetDocById}}
 Accept: application/json
