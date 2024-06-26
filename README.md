@@ -31,6 +31,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#project-status">Project Status</a></li>
         <li><a href="#contributors">Built With</a></li>
         <li><a href="#built-with">Built With</a></li>
         <li><a href="#assignment-document">Built With</a></li>
@@ -62,6 +63,12 @@ and acitivites.
 
 The goal of the assignment is to create a blazor based frontend that consumes a external API; allowing for the students to work with and learn about
 the core functionalities and aspects that governs Blazor application development and use.
+
+
+### Project Status
+
+[![BuildAndTest](https://github.com/Sunyam-Lexicon-2024/lms/actions/workflows/build_test.yml/badge.svg)](https://github.com/Sunyam-Lexicon-2024/lms/actions/workflows/build_test.yml)
+[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B45338%2Fgithub.com%2FSunyam-Lexicon-2024%2Flms.svg?type=shield&issueType=license)](https://app.fossa.com/projects/custom%2B45338%2Fgithub.com%2FSunyam-Lexicon-2024%2Flms?ref=badge_shield&issueType=license)
 
 
 ### Contributors
