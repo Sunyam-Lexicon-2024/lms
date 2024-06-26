@@ -11,7 +11,7 @@ public class Endpoint : Endpoint<CoursePostModel, IEnumerable<CourseModel>, Mapp
         Post("/courses");
     }
 
-    public override async Task HandleAsync(CoursePostModel r, CancellationToken ct)
+    public override async Task HandleAsync(CoursePostModel request, CancellationToken ct)
     {
         IEnumerable<Course> courses;
         IDbContextFactory<LmsDbContext>? contextFactory = TryResolve<IDbContextFactory<LmsDbContext>>();
@@ -22,6 +22,11 @@ public class Endpoint : Endpoint<CoursePostModel, IEnumerable<CourseModel>, Mapp
         }
 
         using var context = contextFactory.CreateDbContext();
+
+        var newCourse = Map.ToEntity();
+
+        context.CourseElements.Add(newCourse);
+
         courses = await context.CourseElements.OfType<Course>()
                                                .ToListAsync(ct);
 
@@ -43,11 +48,27 @@ public class Endpoint : Endpoint<CoursePostModel, IEnumerable<CourseModel>, Mapp
 //        AllowAnonymous();
 //    }
 
-//    public override async Task HandleAsync(Request r, CancellationToken c)
+//public override async Task HandleAsync(Request r, CancellationToken c)
+//{
+//    var author = Map.ToEntity(r);
+
+//    var emailIsTaken = await Data.EmailAddressIsTaken(author.Email);
+
+//    if (emailIsTaken)
+//        AddError(r => r.Email, "Sorry! Email address is already in use...");
+
+//    var userNameIsTaken = await Data.UserNameIsTaken(author.UserName);
+
+//    if (userNameIsTaken)
+//        AddError(r => r.UserName, "Sorry! Ehat username is not available...");
+
+//    ThrowIfAnyErrors();
+
+//    await Data.CreateNewAuthor(author);
+
+//    await SendAsync(new()
 //    {
-//        await SendAsync(new Response()
-//        {
-//            //blank for now
-//        });
-//    }
-}
+//        Message = "Thank you for signing up as an author!"
+//    });
+//}
+//}
