@@ -10,13 +10,13 @@ public static class ServiceExtensions
         {
             services.AddFastEndpoints()
                     .SwaggerDocument(o =>
+                {
+                    o.DocumentSettings = s =>
                     {
-                        o.DocumentSettings = s =>
-                        {
-                            s.Title = "Learning Management System API";
-                            s.Version = "v1";
-                        };
-                    });
+                        s.Title = "Learning Management System API";
+                        s.Version = "v1";
+                    };
+                });
         }
         else
         {

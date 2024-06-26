@@ -1,10 +1,42 @@
 ﻿@page "/Student/"
-@* @using LMS.Client.Components.Pages.Shared *@
+@inject UserManager<User> UserManager
 
 <PageTitle>Student Home</PageTitle>
 
 <h1>Student</h1>
 
+@if (_courseId is not null)
+{
+    <h2>Course Modules</h2>
+    <Modules CourseId="_courseId" />
+}
+else
+{
+    <div class="alert alert-info" role="alert">Student not enrolled in course</div>
+}
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? _authenticationState { get; set; }
+
+    private int? _courseId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (_authenticationState is not null)
+        {
+            var authState = await _authenticationState;
+            var user = authState.User;
+            var targetUser = await UserManager.GetUserAsync(user);
+
+            if (targetUser is Student student)
+            {
+                _courseId = student.CourseId;
+            }
+        }
+    }
+}
 <StudentCourse />
 
 
