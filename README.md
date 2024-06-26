@@ -16,13 +16,10 @@
   <a href="https://github.com/sunyam-lexicon-2024/lms">
     <img src=".docs/images/logo.png" alt="Logo" height="360">
   </a>
-
-<h3 align="center"> LMS Application</h3>
-<h4 align="center"> Silver Astronauts </h4>
-
 </div>
 
-
+<h3 align="center"> Silver Astronauts </h3>
+<h1 align="center"> LMS Application</h1>
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -32,10 +29,9 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#project-status">Project Status</a></li>
-        <li><a href="#contributors">Built With</a></li>
+        <li><a href="#contributors">Contributors</a></li>
+        <li><a href="#assignment-document">Assignment Document</a></li>
         <li><a href="#built-with">Built With</a></li>
-        <li><a href="#assignment-document">Built With</a></li>
-        <li><a href="#contributors">Built With</a></li>
       </ul>
     </li>
     <li>
