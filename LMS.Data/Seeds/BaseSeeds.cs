@@ -101,6 +101,7 @@ public class BaseSeeds(LmsDbContext context)
                 ModuleActivity activityToAdd = new()
                 {
                     Name = $"{module.Name}-Activity-{i + 1}",
+                    Description = $"{module.Name} Description",
                     StartDate = DateOnly.FromDateTime(DateTime.Now),
                     EndDate = DateOnly.FromDateTime(DateTime.Now.AddYears(1)),
                     Parent = module,
