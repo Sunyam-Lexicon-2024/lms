@@ -6,24 +6,33 @@ public static class WebAppExtensions
 {
     public static async Task<WebApplication> ConfigureApplication(this WebApplication app)
     {
-        app.UseDefaultExceptionHandler()
-           .UseFastEndpoints(config =>
-           {
-               config.Endpoints.RoutePrefix = "api"; // prefix all routes with "/api"
-               config.Endpoints.Configurator = ep =>
-               {
-                   ep.AllowAnonymous(); // disable auth temporarily
-               };
-           });
+        app.UseDefaultExceptionHandler();
 
-        if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DevContainers")
+        if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
 
-            if (Environment.GetEnvironmentVariable("SEED_DATA") == "1")
+            app.UseFastEndpoints(config =>
             {
-                await app.SeedDataAsync();
-            }
+                config.Endpoints.RoutePrefix = "api"; // prefix all routes with "/api"
+                config.Endpoints.Configurator = ep =>
+                {
+                    ep.AllowAnonymous(); // disable auth temporarily
+                };
+            })
+            .UseSwaggerGen();
+
+            //if (Environment.GetEnvironmentVariable("SEED_DATA") == "1")
+            //{
+            //    await app.SeedDataAsync();
+            //}
+        }
+        else
+        {
+            app.UseFastEndpoints(config =>
+            {
+                config.Endpoints.RoutePrefix = "api"; // prefix all routes with "/api"
+            });
         }
 
         return app;

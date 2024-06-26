@@ -1,0 +1,55 @@
+﻿@implements IDisposable
+
+@inject NavigationManager NavigationManager
+<div class="px-3 py-2 bg-dark text-white">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <a href="/" class="my-2 my-lg-0 text-white text-decoration-none">
+                LMS
+            </a>
+            <AuthorizeView>
+                <Authorized>
+                        <NavLink class="my-2 my-lg-0 text-white text-decoration-none" href="Account/Manage">
+                            Inloggad som @context.User.Identity?.Name
+                        </NavLink>
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="btn btn-primary my-2 my-lg-0">
+                            Logout
+                        </button>
+                    </form>
+                </Authorized>
+                <NotAuthorized>
+                    <div class="my-2 my-lg-0 text-white text-decoration-none">User not logged in</div>
+                    <NavLink class="btn btn-primary my-2 my-lg-0" href="Account/Login">
+                        Login
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}
+
+

@@ -10,8 +10,19 @@ services:
         - BUILDKIT_INLINE_CACHE=0
     user: vscode
     environment:
-      - DOTNET_ENVIRONMENT=DevContainers
+      - DOTNET_ENVIRONMENT=Development
+      - CONTAINER_ENV=true
     volumes:
       - .:/workspace
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
     command: [ "tail", "-f", "/dev/null" ]
+    ports:
+      - 3000:3000
+      - 3001:3001
+      - 5000:5000
+      - 5001:5001
+    expose:
+      - 3000
+      - 3001
+      - 5000
+      - 5001

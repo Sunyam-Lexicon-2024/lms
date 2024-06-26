@@ -16,6 +16,8 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ExternalLogin> Logger
 
+@attribute [AllowAnonymous]
+
 <PageTitle>Register</PageTitle>
 
 <StatusMessage Message="@message" />

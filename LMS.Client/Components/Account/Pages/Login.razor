@@ -8,6 +8,9 @@
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject UserManager<User> UserManager
+
+@attribute [AllowAnonymous]
 
 <PageTitle>Log in</PageTitle>
 
@@ -102,6 +105,17 @@
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
+
+            var currentUser = await UserManager.FindByEmailAsync(Input.Email);
+            if (currentUser != null)
+            {
+                if (currentUser.GetType().Name != null)
+                {
+                    ReturnUrl = $"/{currentUser.GetType().Name}";
+                }
+
+            }
+
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else if (result.RequiresTwoFactor)

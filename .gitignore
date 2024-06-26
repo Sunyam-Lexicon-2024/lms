@@ -2,9 +2,14 @@
 obj/
 bin/
 
-# SQL
+# SQL / Database
 *.sql
-*.db*
+*.db
+*.db-shm
+*.db-wal
 
 # Visual studio
 .vs
+*.user
+
+# Git
