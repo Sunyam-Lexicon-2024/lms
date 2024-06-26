@@ -91,16 +91,17 @@ public class BaseSeeds(LmsDbContext context)
         var courses = _context.CourseElements.OfType<Course>()
                                             .Where(c => c.ChildElements.Count > 0)
                                             .ToList();
-        var course = _faker.PickRandom(courses);
-        var module = _faker.PickRandom(course.ChildElements);
 
         await Task.Run(() =>
         {
             for (int i = 0; i < count; i++)
             {
+                var course = _faker.PickRandom(courses);
+                var module = _faker.PickRandom(course.ChildElements);
                 ModuleActivity activityToAdd = new()
                 {
                     Name = $"{module.Name}-Activity-{i + 1}",
+                    Description = $"{module.Name} Description",
                     StartDate = DateOnly.FromDateTime(DateTime.Now),
                     EndDate = DateOnly.FromDateTime(DateTime.Now.AddYears(1)),
                     Parent = module,
