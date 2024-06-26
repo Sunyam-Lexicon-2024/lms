@@ -3,9 +3,25 @@ namespace LMS.API.Extensions;
 public static class ServiceExtensions
 {
 
-    public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration config, IHostEnvironment env)
     {
-        services.AddFastEndpoints();
+
+        if (env.IsDevelopment())
+        {
+            services.AddFastEndpoints()
+                    .SwaggerDocument(o =>
+                {
+                    o.DocumentSettings = s =>
+                    {
+                        s.Title = "Learning Management System API";
+                        s.Version = "v1";
+                    };
+                });
+        }
+        else
+        {
+            services.AddFastEndpoints();
+        }
 
         services.AddDbContextFactory<LmsDbContext>(options =>
         {
