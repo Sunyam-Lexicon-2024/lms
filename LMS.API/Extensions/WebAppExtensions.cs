@@ -16,7 +16,7 @@ public static class WebAppExtensions
                };
            });
 
-        if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DevContainers")
+        if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
 

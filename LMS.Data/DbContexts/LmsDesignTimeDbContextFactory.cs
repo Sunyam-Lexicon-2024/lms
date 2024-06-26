@@ -8,30 +8,23 @@ namespace LMS.Data.DbContexts
     {
         public LmsDbContext CreateDbContext(string[] args)
         {
+            var configuration = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json")
+                   .AddJsonFile("appsettings.Development.json")
+                   .Build();
 
-            string? env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+            var optionsBuilder = new DbContextOptionsBuilder<LmsDbContext>();
 
-            var configurationBuilder = new ConfigurationBuilder()
-                   .SetBasePath(Directory.GetCurrentDirectory());
-
-            if (env is not null && env == "DevContainers")
+            // set CONTAINER_ENV=true in your local environment to use a container/unix compatible connection string
+            if (Environment.GetEnvironmentVariable("CONTAINER_ENV") is not null)
             {
-                configurationBuilder
-                   .AddJsonFile("appsettings.DevContainers.json");
+                optionsBuilder.UseSqlite(configuration.GetConnectionString("ContainerConnection"));
             }
             else
             {
-                configurationBuilder
-                   .AddJsonFile("appsettings.json")
-                   .AddJsonFile("appsettings.Development.json");
+                optionsBuilder.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
             }
-
-            var configuration = configurationBuilder.Build();
-
-            var optionsBuilder = new DbContextOptionsBuilder<LmsDbContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-            optionsBuilder.UseSqlite(connectionString);
 
             return new LmsDbContext(optionsBuilder.Options);
         }
