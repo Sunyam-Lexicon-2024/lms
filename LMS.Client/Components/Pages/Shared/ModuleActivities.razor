@@ -23,7 +23,7 @@
                             </div>
                         </div>
                         <div class="accordion-item d-flex flex-row justify-content-between p-2">
-                            @ma.Description?.Substring(0, 100);
+                            @(ma.Description?.Length > 100 ? ma.Description.Substring(0, 100) : ma.Description ?? "No description available")
                         </div>
                     </div>
                 </div>

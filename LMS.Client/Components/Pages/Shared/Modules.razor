@@ -24,11 +24,16 @@
                         </h2>
                         <div id="@m.Name" class="accordion-collapse collapse">
                             <div class="accordion-body d-flex flex-column">
-                                <div>
-                                    <strong>Start:</strong> @m.StartDate
+                                <div class="accordion-item d-flex flex-column p-2">
+                                    <div>
+                                        <strong>Start:</strong> @m.StartDate
+                                    </div>
+                                    <div>
+                                        <strong>End:</strong> @m.EndDate
+                                    </div>
                                 </div>
-                                <div>
-                                    <strong>End:</strong> @m.EndDate
+                                <div class="accordion-item d-flex flex-column p-2">
+                                    @(m.Description?.Length > 100 ? m.Description.Substring(0, 100) : m.Description ?? "No description available")
                                 </div>
                                 <div>
                                     <button class="btn btn-primary my-2" @onclick="@((_) => ShowModal(m))">Module
