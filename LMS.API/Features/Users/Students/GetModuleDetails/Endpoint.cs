@@ -41,5 +41,7 @@ public class Endpoint : EndpointWithoutRequest<Response, Mapper>
         {
             Module = moduleModel
         }, cancellation: ct);
+
+
     }
 }
