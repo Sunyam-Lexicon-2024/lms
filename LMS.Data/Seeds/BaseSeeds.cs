@@ -186,7 +186,7 @@ public class BaseSeeds(LmsDbContext context)
         var users = _context.Users.OfType<Teacher>().ToList();
         var courseElements = _context.CourseElements.OfType<Course>().ToList();
 
-        if (!users.Any() || !courseElements.Any())
+        if (users.Count == 0 || courseElements.Count == 0)
         {
             throw new InvalidOperationException("Users or CourseElements are not available for generating documents.");
         }

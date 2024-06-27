@@ -11,5 +11,5 @@ public class Document
     public CourseElement CourseElement { get; set; } = null!;
     public string UploaderId { get; set; }
     public User User { get; set; } = null!;
-    public ICollection<Comment> Comments => [];
+    public ICollection<Comment> Comments { get; } = [];
 }
