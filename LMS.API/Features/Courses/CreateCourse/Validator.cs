@@ -8,18 +8,13 @@ public class Validator : Validator<CoursePostModel>
     {
         RuleFor(c => c.Name)
             .NotEmpty().WithMessage("A course name is required!")
-            //.Custom(c => { DateTime.TryParse(c.Text, out temp)})
-            .MinimumLength(3).WithMessage("name is too short!")
-            .MaximumLength(25).WithMessage("name is too long!");
+            .MaximumLength(255).WithMessage("The course name is too long"); ;
 
-        //RuleFor(x => x.StartDate)
-        //    .NotEmpty().WithMessage("email address is required!");
-
-        //RuleFor(x => x.EndDate)
-        //    .NotEmpty().WithMessage("a username is required!")
-        //    .MinimumLength(3).WithMessage("username is too short!")
-        //    .MaximumLength(15).WithMessage("username is too long!");
+        RuleFor(c => c.StartDate)
+            .NotEmpty().WithMessage("Start date is required to follow the format \"YYYY-MM-DD\"!");
+        RuleFor(c => c.EndDate)
+            .NotEmpty().WithMessage("End date is required to follow the format \"YYYY-MM-DD\"!")
+            .GreaterThanOrEqualTo(c => c.StartDate).WithMessage("End date must not occur before the start date!");
     }
-
 }
 
