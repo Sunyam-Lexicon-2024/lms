@@ -10,6 +10,8 @@ public class Mapper : ResponseMapper<Response, Course>
             CourseId = c.Id,
             Name = c.Name,
             Description = c.Description,
+            StartDate = c.StartDate,
+            EndDate = c.EndDate
         };
     }
 }
