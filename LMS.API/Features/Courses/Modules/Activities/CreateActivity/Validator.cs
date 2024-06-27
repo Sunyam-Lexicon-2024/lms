@@ -25,7 +25,7 @@ public class Validator : Validator<Request>
             .WithMessage("Activity must be assigned to module");
 
         RuleFor(r => r.StartDate)
-            .Must((r, startDate) => r.EndDate < startDate)
+            .Must((r, startDate) => startDate <= r.EndDate)
             .WithMessage("Activity Start date cannot be after end date");
     }
 }

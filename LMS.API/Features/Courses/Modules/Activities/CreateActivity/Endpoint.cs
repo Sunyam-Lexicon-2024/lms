@@ -11,6 +11,26 @@ public class Endpoint : Endpoint<
     public override void Configure()
     {
         Post("/courses/modules/activities/create-activity");
+        Description(d =>
+        {
+            d.Produces<Response>(200, "application/json");
+            d.Produces(403);
+        });
+        Summary(s =>
+        {
+            s.Summary = "Creates Module Activity.";
+            s.Description = "Creates a new module activity by the specified values in the request ";
+            s.ExampleRequest = new Request()
+            {
+                Name = "My Module",
+                Description = "My Module Description",
+                ParentId = 10,
+                Type = ActivityType.ELearning,
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(2))
+            };
+            s.ResponseExamples[200] = new Response() { ActivityId = 1, Name = "My Module" };
+        });
     }
 
     public override async Task<
