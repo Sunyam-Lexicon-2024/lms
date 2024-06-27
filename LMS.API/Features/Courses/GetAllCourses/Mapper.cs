@@ -1,14 +1,15 @@
 namespace Courses.GetAllCourses;
 
-public class Mapper : ResponseMapper<CourseModel, Course>
+public class Mapper : ResponseMapper<Response, Course>
 {
 
-    public override CourseModel FromEntity(Course c)
+    public override Response FromEntity(Course c)
     {
-        return new CourseModel()
+        return new Response()
         {
             CourseId = c.Id,
             Name = c.Name,
+            Description = c.Description,
         };
     }
 }

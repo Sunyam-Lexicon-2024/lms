@@ -1,5 +1,3 @@
-using LMS.Core.Models;
-
 namespace Users.Students.GetAllStudents;
 
 public class Response

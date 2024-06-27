@@ -1,0 +1,114 @@
+@inject HttpClient ApiClient
+@inject ModalService ModalService
+@inject ILogger<Modules> Logger
+
+<Accordion>
+@if (!_apiAvailable)
+{
+    <div class="alert alert-danger" role="alert">API not available</div>
+}
+else
+{
+    @if (_dataLoaded)
+    {
+        if (_modules.Any())
+        {
+            @foreach (var m in _modules)
+            {
+                <AccordionItem Title="@m.Name">
+                    <Content>
+                        <span><strong>Start:</strong> @m.StartDate</span>
+                        <span><strong>End:</strong> @m.EndDate</span>
+                        <div class="d-flex flex-column my-2">@(m.Description?.Length > 100 ? $"{m.Description.Substring(0, 100)}..." : m.Description ?? "No description available")</div>
+                        <button class="btn btn-primary my-2" @onclick="@((_) => ShowModal(m))">Module Activities</button>
+                    </Content>
+                </AccordionItem>
+            }
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">No courses available</div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-primary" role="alert">Loading...</div>
+    }
+}
+</Accordion>
+
+<Modal 
+    @ref="_moduleModal" 
+    Title="@_moduleTitle" 
+    HeaderCssClass="d-flex flex-row justify-content-between"
+    OnHiding="OnModalHidingAsync">
+    <BodyTemplate>
+        <ModuleActivities 
+            @ref="_activitiesComponent"  
+            Activities="_moduleActivities" 
+            ModuleTitle="_moduleTitle" 
+        />
+    </BodyTemplate>
+</Modal>
+
+@code {
+
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
+    private IEnumerable<ModuleActivityBaseModel>? _moduleActivities = [];
+    private IEnumerable<ModuleBaseModel> _modules = [];
+    private Modal? _moduleModal = default!;
+    private ModuleActivities _activitiesComponent = default!;
+    private string? _moduleTitle;
+
+    [Parameter]
+    public int? CourseId { get; set; }
+
+    private async Task OnModalHidingAsync()
+    {
+        await _activitiesComponent.Collapse();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await ApiClient.GetFromJsonAsync<ModuleData>($"courses/{CourseId}/modules")!;
+            _modules = response!.Modules!;
+            _dataLoaded = true;
+        }
+        catch
+        {
+            _apiAvailable = false;
+        }
+    }
+
+    private async Task ShowModal(ModuleBaseModel module)
+    {
+        try
+        {
+            _moduleActivities = await ApiClient
+            .GetFromJsonAsync<IEnumerable<ModuleActivityBaseModel>>($"courses/modules/{module.ModuleId}/get-all-activities");
+        }
+        catch (Exception ex)
+        {
+            _apiAvailable = false;
+            Logger.LogError("{exception}", ex);
+        }
+        finally
+        {
+            try
+            {
+                _moduleTitle = $"{module.Name} activities";
+                await _moduleModal!.ShowAsync();
+            }
+            catch
+            { } // needed to silence JSInterop not recognizing exited circuit
+        }
+    }
+
+    private class ModuleData
+    {
+        public IEnumerable<ModuleBaseModel>? Modules { get; set; }
+    }
+}

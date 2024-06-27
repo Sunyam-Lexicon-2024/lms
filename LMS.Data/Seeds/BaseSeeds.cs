@@ -10,6 +10,8 @@ public class BaseSeeds(LmsDbContext context)
 
     private readonly List<User> _users = [];
     private readonly List<Course> _courses = [];
+    private readonly List<Module> _modules = [];
+    private readonly List<ModuleActivity> _activities = [];
 
     private readonly LmsDbContext _context = context;
     private readonly Faker _faker = new();
@@ -19,12 +21,20 @@ public class BaseSeeds(LmsDbContext context)
         try
         {
             await GenerateCourses(3);
-            _context.CourseElements.AddRange(_courses);
+            await _context.CourseElements.AddRangeAsync(_courses);
+            await _context.SaveChangesAsync();
+
+            await GenerateModules(30);
+            await _context.CourseElements.AddRangeAsync(_modules);
+            await _context.SaveChangesAsync();
+
+            await GenerateActivities(90);
+            await _context.CourseElements.AddRangeAsync(_activities);
             await _context.SaveChangesAsync();
 
             await GenerateStudents(50);
             await GenerateTeachers(5);
-            _context.Users.AddRange(_users);
+            await _context.Users.AddRangeAsync(_users);
             await _context.SaveChangesAsync();
         }
         catch (Exception)
@@ -49,6 +59,57 @@ public class BaseSeeds(LmsDbContext context)
                 };
 
                 _courses.Add(courseToAdd);
+            }
+        });
+    }
+
+    private async Task GenerateModules(int count)
+    {
+        var courses = _context.CourseElements.OfType<Course>().ToList();
+
+        await Task.Run(() =>
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var course = _faker.PickRandom(courses);
+                Module moduleToAdd = new()
+                {
+                    Name = $"{course.Name}-Module-{i + 1}",
+                    StartDate = DateOnly.FromDateTime(DateTime.Now),
+                    EndDate = DateOnly.FromDateTime(DateTime.Now.AddYears(1)),
+                    Parent = course,
+                    ParentId = course.Id
+                };
+
+                _modules.Add(moduleToAdd);
+            }
+        });
+    }
+
+    private async Task GenerateActivities(int count)
+    {
+        var courses = _context.CourseElements.OfType<Course>()
+                                            .Where(c => c.ChildElements.Count > 0)
+                                            .ToList();
+
+        await Task.Run(() =>
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var course = _faker.PickRandom(courses);
+                var module = _faker.PickRandom(course.ChildElements);
+                ModuleActivity activityToAdd = new()
+                {
+                    Name = $"{module.Name}-Activity-{i + 1}",
+                    Description = $"{module.Name} Description",
+                    StartDate = DateOnly.FromDateTime(DateTime.Now),
+                    EndDate = DateOnly.FromDateTime(DateTime.Now.AddYears(1)),
+                    Parent = module,
+                    ParentId = module.Id,
+                    Type = _faker.PickRandom<ActivityType>()
+                };
+
+                _activities.Add(activityToAdd);
             }
         });
     }

@@ -14,6 +14,8 @@ public static class ServiceExtensions
         services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
+        services.AddBlazorBootstrap();
+
         services.AddCascadingAuthenticationState();
         services.AddScoped<IdentityUserAccessor>();
         services.AddScoped<IdentityRedirectManager>();

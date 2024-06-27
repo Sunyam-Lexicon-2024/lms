@@ -1,0 +1,82 @@
+﻿@using System.Security.Claims
+@inject HttpClient ApiClient
+@inject UserManager<User> UserManager
+
+<div>
+    @if (!_apiAvailable)
+    {
+        <div class="alert alert-danger" role="alert">API not available</div>
+    }
+    else
+    {
+        @if (_dataLoaded)
+        {
+            @if (_studentCourse is not null)
+            {
+                <h3>Current Course</h3>
+                <Card class="mb-4">
+                    <CardHeader class="pb-0"  Color="CardColor.Secondary">
+                        <h5>@_studentCourse.Name</h5>
+                    </CardHeader>
+                    <CardBody>
+                        <strong>Duration:</strong> @_studentCourse.StartDate - @_studentCourse.EndDate
+                        <hr>
+                        <span>@(_studentCourse.Description?.Length > 100 ? $"{_studentCourse.Description.Substring(0, 100)}..." :
+                              _studentCourse.Description ?? "No description available")</span>
+                    </CardBody>
+                </Card>
+            }
+            else
+            {
+                <div class="alert alert-primary" role="alert">No course available</div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">Loading...</div>
+        }
+    }
+</div>
+
+@code {
+
+    private StudentCourseBaseModel _studentCourse = new StudentCourseBaseModel();
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState.User;
+            var targetUser = await UserManager.GetUserAsync(user);
+
+            if (targetUser is not null)
+            {
+                try
+                {
+                    var response = await ApiClient.GetFromJsonAsync<Response>($"users/students/{targetUser.Id}/course");
+                    if (response != null && response.StudentCourse != null)
+                    {
+                        _studentCourse = response.StudentCourse;
+                    }
+
+                    _dataLoaded = true;
+                }
+                catch
+                {
+                    _apiAvailable = false;
+                }
+            }
+        }
+    }
+
+    private class Response
+    {
+        public StudentCourseBaseModel? StudentCourse { get; set; }
+    }
+}
