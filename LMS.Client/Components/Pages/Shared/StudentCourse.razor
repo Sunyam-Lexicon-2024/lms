@@ -13,12 +13,18 @@
         {
             @if (_studentCourse is not null)
             {
-                <h2>Current Course</h2>
-
-                <div class="d-block p-2 bg-secondary text-white">
-                    <p><strong>@_studentCourse.Name</strong></p>
-                    <strong>Duration:</strong> @_studentCourse.StartDate - @_studentCourse.EndDate
-                </div>
+                <h3>Current Course</h3>
+                <Card class="mb-4">
+                    <CardHeader class="pb-0"  Color="CardColor.Secondary">
+                        <h5>@_studentCourse.Name</h5>
+                    </CardHeader>
+                    <CardBody>
+                        <strong>Duration:</strong> @_studentCourse.StartDate - @_studentCourse.EndDate
+                        <hr>
+                        <span>@(_studentCourse.Description?.Length > 100 ? $"{_studentCourse.Description.Substring(0, 100)}..." :
+                              _studentCourse.Description ?? "No description available")</span>
+                    </CardBody>
+                </Card>
             }
             else
             {
@@ -33,7 +39,7 @@
 </div>
 
 @code {
-    
+
     private StudentCourseBaseModel _studentCourse = new StudentCourseBaseModel();
     private bool _apiAvailable = true;
     private bool _dataLoaded = false;

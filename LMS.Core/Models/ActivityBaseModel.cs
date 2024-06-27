@@ -1,8 +1,8 @@
 namespace LMS.Core.Models;
 
-public class ModuleBaseModel
+public class ModuleActivityBaseModel
 {
-    public int ModuleId { get; set;}
+    public int ActivityId { get; set; }
     public string Name { get; set; }
     public string? Description { get; set; }
     public DateOnly StartDate { get; set; }

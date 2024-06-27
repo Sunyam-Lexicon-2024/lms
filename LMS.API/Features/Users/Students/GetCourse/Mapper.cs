@@ -1,16 +1,15 @@
-﻿using Courses.GetAllCourses;
+﻿namespace Users.Students.GetCourse;
 
-namespace Users.Students.GetCourse;
-
-public class Mapper : ResponseMapper<StudentCourseBaseModel, CourseElement>
+public class Mapper : ResponseMapper<StudentCourseBaseModel, Course>
 {
-    public override StudentCourseBaseModel FromEntity(CourseElement ce)
+    public override StudentCourseBaseModel FromEntity(Course c)
     {
         return new StudentCourseBaseModel()
         {
-            Name = ce.Name,
-            StartDate = ce.StartDate,
-            EndDate = ce.EndDate,
+            Name = c.Name,
+            Description = c.Name,
+            StartDate = c.StartDate,
+            EndDate = c.EndDate,
         };
     }
 }
