@@ -50,12 +50,28 @@ public class Endpoint : Endpoint<
 
         bool activityExists = await context.CourseElements
                                         .OfType<ModuleActivity>()
-                                        .AnyAsync(ce => ce.Name == req.Name && ce.ParentId == req.ParentId, ct);
+                                        .AnyAsync(ce => ce.Name == req.Name
+                                            && ce.Type == req.Type
+                                            && ce.ParentId == req.ParentId, ct);
 
         if (activityExists)
         {
-            return TypedResults.BadRequest("Activity already registered");
+            AddError(r => r.GetType().Name, "Activity exists");
         }
+
+        var module = await context.CourseElements.OfType<Module>().FirstOrDefaultAsync(m => m.Id == req.ParentId, ct);
+
+        if (req.StartDate < module.StartDate || req.StartDate > module.EndDate)
+        {
+            AddError(r => r.StartDate, "Start date out of scope of module period");
+        }
+
+        if (req.EndDate > module.EndDate || req.EndDate < module.StartDate)
+        {
+            AddError(r => r.StartDate, "End date out of scope of module period");
+        }
+
+        ThrowIfAnyErrors();
 
         var activityToCreate = Map.ToEntity(req);
 

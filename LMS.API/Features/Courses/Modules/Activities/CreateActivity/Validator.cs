@@ -24,8 +24,16 @@ public class Validator : Validator<Request>
             .NotNull()
             .WithMessage("Activity must be assigned to module");
 
+        RuleFor(r => r.EndDate)
+            .GreaterThanOrEqualTo(r => r.StartDate)
+            .WithMessage("Activity end date cannot be before start date");
+
         RuleFor(r => r.StartDate)
-            .Must((r, startDate) => startDate <= r.EndDate)
-            .WithMessage("Activity Start date cannot be after end date");
+            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
+            .WithMessage("Activity start date must be current or future date");
+        
+        RuleFor(r => r.EndDate)
+            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
+            .WithMessage("Activity end date must be current or future date");
     }
 }
