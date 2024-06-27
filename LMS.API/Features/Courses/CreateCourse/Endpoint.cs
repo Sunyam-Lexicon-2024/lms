@@ -1,8 +1,12 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Diagnostics;
 using Users.Students.GetAllStudents;
 
 namespace Courses.CreateCourse;
 
-public class Endpoint : Endpoint<CoursePostModel, Response, Mapper>
+public class Endpoint : Endpoint<CoursePostModel,
+    Results<Ok<Response>, BadRequest<string>>,
+    Mapper>
 {
     
 
@@ -11,7 +15,7 @@ public class Endpoint : Endpoint<CoursePostModel, Response, Mapper>
         Post("/courses");
     }
 
-    public override async Task HandleAsync(CoursePostModel request, CancellationToken ct)
+    public override async Task<Results<Ok<Response>,BadRequest<string>>> ExecuteAsync(CoursePostModel request, CancellationToken ct)
     {
         IDbContextFactory<LmsDbContext>? contextFactory = TryResolve<IDbContextFactory<LmsDbContext>>();
 
@@ -24,13 +28,16 @@ public class Endpoint : Endpoint<CoursePostModel, Response, Mapper>
 
         var newCourse = Map.ToEntity(request);
 
-        context.CourseElements.Add(newCourse);
+        var addedCourse = await context.CourseElements.AddAsync(newCourse);
         await context.SaveChangesAsync();
 
+        var course = addedCourse.Entity as Course;
 
-        await SendAsync(new Response()
+        if (course is not null)
         {
-            Message = $"The course '{request.Name}' was added."
-        });
+            return TypedResults.Ok(Map.FromEntity(course));
+        }
+
+        return TypedResults.BadRequest("Could not create the Course.");
     }
 }

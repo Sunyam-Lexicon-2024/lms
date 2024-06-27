@@ -12,4 +12,13 @@ public class Mapper : Mapper<CoursePostModel, Response, Course>
             EndDate = c.EndDate
         };
     }
+
+    public override Response FromEntity(Course c)
+    {
+        return new Response()
+        {
+            CourseId = c.Id,
+            Name = c.Name
+        };
+    }
 }

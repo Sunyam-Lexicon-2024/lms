@@ -10,5 +10,6 @@ public class CoursePostModel
 
 public class Response
 {
-    public string Message { get; set; }
+    public int CourseId { get; set; }
+    public string Name { get; set; }
 }
