@@ -2,9 +2,9 @@ using Users.Students.GetAllStudents;
 
 namespace Courses.CreateCourse;
 
-//public class Endpoint : EndpointWithoutRequest<IEnumerable<CourseModel>, Mapper>
-public class Endpoint : Endpoint<CoursePostModel, IEnumerable<CourseModel>, Mapper>
+public class Endpoint : Endpoint<CoursePostModel, Response, Mapper>
 {
+    
 
     public override void Configure()
     {
@@ -13,7 +13,6 @@ public class Endpoint : Endpoint<CoursePostModel, IEnumerable<CourseModel>, Mapp
 
     public override async Task HandleAsync(CoursePostModel request, CancellationToken ct)
     {
-        IEnumerable<Course> courses;
         IDbContextFactory<LmsDbContext>? contextFactory = TryResolve<IDbContextFactory<LmsDbContext>>();
 
         if (contextFactory is null)
@@ -29,49 +28,9 @@ public class Endpoint : Endpoint<CoursePostModel, IEnumerable<CourseModel>, Mapp
         await context.SaveChangesAsync();
 
 
-        // TODO: Send success instead
-        courses = await context.CourseElements.OfType<Course>()
-                                               .ToListAsync(ct);
-
-        var courseModels = courses.Select(Map.FromEntity).ToList();
-
-        await SendAsync(courseModels, cancellation: ct);
+        await SendAsync(new Response()
+        {
+            Message = $"The course '{request.Name}' was added."
+        });
     }
 }
-
-
-
-//namespace Author.Signup;
-
-//public class Endpoint : Endpoint<Request, Response, Mapper>
-//{
-//    public override void Configure()
-//    {
-//        Post("/author/signup");
-//        AllowAnonymous();
-//    }
-
-//public override async Task HandleAsync(Request r, CancellationToken c)
-//{
-//    var author = Map.ToEntity(r);
-
-//    var emailIsTaken = await Data.EmailAddressIsTaken(author.Email);
-
-//    if (emailIsTaken)
-//        AddError(r => r.Email, "Sorry! Email address is already in use...");
-
-//    var userNameIsTaken = await Data.UserNameIsTaken(author.UserName);
-
-//    if (userNameIsTaken)
-//        AddError(r => r.UserName, "Sorry! Ehat username is not available...");
-
-//    ThrowIfAnyErrors();
-
-//    await Data.CreateNewAuthor(author);
-
-//    await SendAsync(new()
-//    {
-//        Message = "Thank you for signing up as an author!"
-//    });
-//}
-//}
