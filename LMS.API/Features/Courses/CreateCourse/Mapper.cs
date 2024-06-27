@@ -7,6 +7,7 @@ public class Mapper : Mapper<CoursePostModel, Response, Course>
         return new Course()
         {
             Name = c.Name,
+            Description = c.Description,
             StartDate = c.StartDate,
             EndDate = c.EndDate
         };
