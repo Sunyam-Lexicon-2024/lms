@@ -61,7 +61,7 @@
                 </div>
                 <Button Type="ButtonType.Submit" Color="ButtonColor.Primary"> Create Activity </Button>
             </EditForm>
-            @if (_errorResponse is not null && _errorResponse.Errors.Count > 0)
+            @if (_errorResponse is not null && _errorResponse.Errors!.Count > 0)
             {
                 <Alert class="d-flex flex-column mt-2" Color="AlertColor.Danger">
                     <Icon Name="IconName.ExclamationTriangleFill" />
@@ -90,13 +90,13 @@
 
     private bool _apiAvailable = true;
     private bool _dataLoaded = false;
-    private CourseBaseModel? _selectedCourse { get; set; }
+    private CourseBaseModel _selectedCourse = default!;
     private IEnumerable<CourseBaseModel>? _courses = [];
-    private IEnumerable<ModuleBaseModel>? _modules = [];
-    private int _selectedCourseId;
+    private IEnumerable<ModuleBaseModel> _modules = [];
+    private int? _selectedCourseId;
     private ModuleActivityCreateModel _createActivityFormModel = new();
-    private ModuleBaseModel? _selectedModule { get; set; }
-    private ModuleData _moduleResponse = default!;
+    private ModuleBaseModel _selectedModule = default!;
+    private ModuleData? _moduleResponse;
 
     private ApiErrorResponseModel? _errorResponse;
 
@@ -106,7 +106,7 @@
         {
             _courses = await ApiClient.GetFromJsonAsync<IEnumerable<CourseBaseModel>>("courses/get-all-courses");
             _selectedCourse = _courses!.First();
-            _selectedCourseId = (int)_selectedCourse.CourseId;
+            _selectedCourseId = _selectedCourse.CourseId;
             await SetCourse();
             _dataLoaded = true;
             _apiAvailable = true;
@@ -119,10 +119,20 @@
 
     private async Task SetCourse()
     {
-        _moduleResponse = await ApiClient.GetFromJsonAsync<ModuleData>($"courses/{_selectedCourseId}/modules");
-        _modules = _moduleResponse.Modules;
-        _selectedModule = _modules.First()!;
-        _createActivityFormModel.ParentId = _selectedModule!.ModuleId;
+        try
+        {
+            _moduleResponse = await ApiClient.GetFromJsonAsync<ModuleData>($"courses/{_selectedCourseId}/modules");
+            if (_moduleResponse!.Modules.Any())
+            {
+                _modules = _moduleResponse.Modules;
+                _selectedModule = _modules.First();
+                _createActivityFormModel.ParentId = _selectedModule.ModuleId;
+            }
+        }
+        catch
+        {
+            _apiAvailable = false;
+        }
     }
 
     private async Task Submit()
@@ -141,9 +151,9 @@
             {
                 _errorResponse = new()
                     {
-                        Errors = new Dictionary<string, List<string>>() { { "exists", [await response.Content.ReadAsStringAsync()] } }
+                        Errors = new Dictionary<string, List<string>>() { { "Unexpected error", [await response.Content.ReadAsStringAsync()] } }
                     };
-                ToastService.Notify(new(ToastType.Danger, $"Activity already exists: '{_createActivityFormModel.Name}'."));
+                ToastService.Notify(new(ToastType.Danger, $"Unexpected error: '{_createActivityFormModel.Name}'."));
             }
         }
         else
