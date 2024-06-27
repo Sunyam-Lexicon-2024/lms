@@ -1,0 +1,1 @@
+global using LMS.Core.Entities.Enums;
