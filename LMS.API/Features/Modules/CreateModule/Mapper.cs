@@ -1,15 +1,15 @@
 ﻿namespace LMS.API.Features.Modules.CreateModule
 {
-    public class Mapper : ResponseMapper<CreateModuleBaseModel, CourseElement>
+    public class Mapper : ResponseMapper<CourseElement, CreateModuleBaseModel>
     {
-        public override CreateModuleBaseModel FromEntity(CourseElement ce)
+        public override CreateModuleBaseModel ToEntity(CourseElement ce)
         {
             return new CreateModuleBaseModel()
             {
                 Name = ce.Name,
                 StartDate = ce.StartDate,
                 EndDate = ce.EndDate,
-                CourseId = ce.ParentId
+                ParentId = ce.ParentId
             };
         }
     }

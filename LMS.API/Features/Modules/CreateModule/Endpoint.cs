@@ -1,6 +1,6 @@
 ﻿namespace Modules.CreateModule;
 
-public class Endpoint : Endpoint<Request, Response, Mapper>
+public class Endpoint : Endpoint<CreateModuleModel, Response, Mapper>
 {
     public override void Configure()
     {
@@ -19,7 +19,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         });
     }
 
-    public override async Task HandleAsync(Request req, CancellationToken ct)
+    public override async Task HandleAsync(CreateModuleModel req, CancellationToken ct)
     {
         IDbContextFactory<LmsDbContext>? contextFactory = TryResolve<IDbContextFactory<LmsDbContext>>();
 
@@ -31,7 +31,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         using var context = contextFactory.CreateDbContext();
 
         // check course exists
-        var course = await context.CourseElements.FindAsync(req.CreateModuleBaseModel.ParentId);
+        var course = await context.CourseElements.FindAsync(req.ParentId);
 
         if (course is null)
         {
@@ -39,25 +39,26 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
             return; // Ensure method exits if there's an error
         }
 
-        var newModule = new 
-        {
-            Id = Guid.NewGuid().ToString(),
-            CourseId = req.CourseId,
-            Name = req.Name,
-            StartDate = req.StartDate,
-            EndDate = req.EndDate
-        };
+        var newModule = Map.ToEntity(req);
 
         // Save the new module to database.
         await context.CourseElements.AddAsync(newModule);
+        await context.SaveChangesAsync(ct);
+
 
         // Return the location header only
-        var location = $"/courses/{req.CourseId}/modules";
+        var location = $"/courses/{req.CreateModuleBaseModel.ParentId}/modules";
         //Response.Headers.Add("Location", location);
 
         // Send 201 Created status with no body
-        await SendCreatedAtAsync(location, null, cancellation: ct);
+        //await SendCreatedAtAsync(location, null, [get], cancellation: ct);
 
+        // Set the Location header with HTTP verb information
+        HttpContext.Response.Headers.Add("Location", location);
+        HttpContext.Response.Headers.Add("Allow", "GET"); // Add Allow header for HTTP verb
+
+        // Send 201 Created status with no body
+        await SendAsync(new()
+        {},cancellation: ct); // Specify 'object' explicitly
     }
 }
-
