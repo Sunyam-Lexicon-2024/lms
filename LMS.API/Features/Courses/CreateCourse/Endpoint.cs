@@ -28,6 +28,8 @@ public class Endpoint : Endpoint<CoursePostModel, IEnumerable<CourseModel>, Mapp
         context.CourseElements.Add(newCourse);
         await context.SaveChangesAsync();
 
+
+        // TODO: Send success instead
         courses = await context.CourseElements.OfType<Course>()
                                                .ToListAsync(ct);
 
