@@ -39,7 +39,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
             .FirstOrDefaultAsync(s => s.Id == req.StudentId, ct);
 
         var course = await context.CourseElements.OfType<Course>()
-                                                .FirstOrDefaultAsync(c => c.Id == student.CourseId);
+                                                .FirstOrDefaultAsync(c => c.Id == student.CourseId, ct);
 
         if (course is null)
         {
