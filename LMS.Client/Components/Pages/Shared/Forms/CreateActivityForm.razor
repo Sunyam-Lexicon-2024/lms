@@ -1,0 +1,172 @@
+@inject HttpClient ApiClient
+@inject ToastService ToastService
+
+<div class="container-fluid">
+    @if (!_apiAvailable)
+    {
+        <Alert Color="AlertColor.Danger">
+            <Icon Name="IconName.ExclamationTriangleFill" />
+            API not available
+        </Alert>
+    }
+    else
+    {
+        @if (_dataLoaded)
+        {
+            <EditForm Model="_createActivityFormModel" OnSubmit="Submit" FormName="CreateActivityForm">
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Name</strong></label>
+                    <InputText @bind-Value="_createActivityFormModel!.Name" placeholder="Enter name..." />
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Description</strong></label>
+                    <InputText @bind-Value="_createActivityFormModel!.Description" placeholder="Enter description..." />
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Type</strong></label>
+                    <InputSelect @bind-Value="_createActivityFormModel.Type">
+                        @foreach (var t in Enum.GetValues<ActivityType>())
+                        {
+                            <option value="@t">@t</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Course</strong></label>
+                    <InputSelect @bind-Value="_selectedCourseId" @bind-Value:after="SetCourse">
+                        @foreach (var c in _courses!)
+                        {
+                            <option value="@c.CourseId">@c.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Module</strong></label>
+                    <InputSelect @bind-Value="_createActivityFormModel.ParentId">
+                        @foreach (var m in _modules!)
+                        {
+                            <option value="@m.ModuleId">@m.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Start Date</strong></label>
+                    <DateInput TValue="DateOnly" @bind-Value="_createActivityFormModel.StartDate" EnableMinMax="true"
+                        Min="@_selectedModule!.StartDate" Max="@_selectedModule!.EndDate" />
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>End Date</strong></label>
+                    <DateInput class="my-2" TValue="DateOnly" @bind-Value="_createActivityFormModel.EndDate" EnableMinMax="true"
+                        Min="@_selectedModule!.StartDate" Max="@_selectedModule!.EndDate" />
+                </div>
+                <Button Type="ButtonType.Submit" Color="ButtonColor.Primary"> Create Activity </Button>
+            </EditForm>
+            @if (_errorResponse is not null && _errorResponse.Errors!.Count > 0)
+            {
+                <Alert class="d-flex flex-column mt-2" Color="AlertColor.Danger">
+                    <Icon Name="IconName.ExclamationTriangleFill" />
+                    <p><strong>Validation failed</strong></p>
+                    <hr>
+                    @foreach (var (property, errors) in _errorResponse.Errors)
+                    {
+                        <p><strong>@property</strong></p>
+                        foreach (var e in errors)
+                        {
+                            <p>@e</p>
+                        }
+                    }
+                </Alert>
+            }
+        }
+        else
+        {
+            <Alert Color="AlertColor.Info">Loading...</Alert>
+        }
+    }
+</div>
+
+@code
+{
+
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
+    private CourseBaseModel _selectedCourse = default!;
+    private IEnumerable<CourseBaseModel>? _courses = [];
+    private IEnumerable<ModuleBaseModel> _modules = [];
+    private int? _selectedCourseId;
+    private ModuleActivityCreateModel _createActivityFormModel = new();
+    private ModuleBaseModel _selectedModule = default!;
+    private ModuleData? _moduleResponse;
+
+    private ApiErrorResponseModel? _errorResponse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _courses = await ApiClient.GetFromJsonAsync<IEnumerable<CourseBaseModel>>("courses/get-all-courses");
+            _selectedCourse = _courses!.First();
+            _selectedCourseId = _selectedCourse.CourseId;
+            await SetCourse();
+            _dataLoaded = true;
+            _apiAvailable = true;
+        }
+        catch
+        {
+            _apiAvailable = false;
+        }
+    }
+
+    private async Task SetCourse()
+    {
+        try
+        {
+            _moduleResponse = await ApiClient.GetFromJsonAsync<ModuleData>($"courses/{_selectedCourseId}/modules");
+            if (_moduleResponse!.Modules.Any())
+            {
+                _modules = _moduleResponse.Modules;
+                _selectedModule = _modules.First();
+                _createActivityFormModel.ParentId = _selectedModule.ModuleId;
+            }
+        }
+        catch
+        {
+            _apiAvailable = false;
+        }
+    }
+
+    private async Task Submit()
+    {
+        var response = await
+        ApiClient.PostAsJsonAsync<ModuleActivityCreateModel>("courses/modules/activities/create-activity",
+        _createActivityFormModel);
+        if (!response.IsSuccessStatusCode)
+        {
+            try
+            {
+                _errorResponse = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>()!;
+                ToastService.Notify(new(ToastType.Danger, $"Could not create activity'{_createActivityFormModel.Name}'."));
+            }
+            catch
+            {
+                _errorResponse = new()
+                    {
+                        Errors = new Dictionary<string, List<string>>() { { "Unexpected error", [await response.Content.ReadAsStringAsync()] } }
+                    };
+                ToastService.Notify(new(ToastType.Danger, $"Unexpected error: '{_createActivityFormModel.Name}'."));
+            }
+        }
+        else
+        {
+            ToastService.Notify(new(ToastType.Success, $"Activity '{_createActivityFormModel.Name}' successfully."));
+            _createActivityFormModel = new();
+            _errorResponse = null;
+            await SetCourse();
+        }
+    }
+
+    private class ModuleData
+    {
+        public IEnumerable<ModuleBaseModel> Modules { get; set; } = [];
+    }
+}

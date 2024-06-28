@@ -4,6 +4,26 @@
 
 <h1>Teacher</h1>
 
-[Teacher modules]
+[Teacher Courses]
+
+<Button Color="ButtonColor.Primary" TooltipTitle="Create a new activity"
+    @onclick="ShowCreateActivityFormModal">Placeholder Create Activity Button</Button>
+
+<Modal @ref="_createActivityFormModal" Title="Create New Activity"
+    HeaderCssClass="d-flex flex-row justify-content-between">
+    <BodyTemplate>
+        <CreateActivityForm />
+    </BodyTemplate>
+</Modal>
 
 <CreateCourse />
+
+@code {
+
+    private Modal _createActivityFormModal = default!;
+
+    private async Task ShowCreateActivityFormModal()
+    {
+        await _createActivityFormModal.ShowAsync();
+    }
+}
