@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace Courses.CreateCourse;
+﻿namespace Courses.CreateCourse;
 
 public class Validator : Validator<CoursePostModel>
 {
