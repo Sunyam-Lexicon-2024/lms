@@ -16,9 +16,9 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
             s.Description = "Gets the course for an authenticate student";
             s.ResponseExamples[200] = new StudentCourseBaseModel()
             {
-                        Name = "my course",
-                        StartDate = DateOnly.FromDateTime(DateTime.Now),
-                        EndDate = DateOnly.FromDateTime(DateTime.Now.AddYears(1))
+                Name = "my course",
+                StartDate = DateOnly.FromDateTime(DateTime.Now),
+                EndDate = DateOnly.FromDateTime(DateTime.Now.AddYears(1))
             };
         });
     }
@@ -38,7 +38,8 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         var student = await context.Users.OfType<Student>()
             .FirstOrDefaultAsync(s => s.Id == req.StudentId, ct);
 
-        var course = await context.CourseElements.FindAsync(student.CourseId);
+        var course = await context.CourseElements.OfType<Course>()
+                                                .FirstOrDefaultAsync(c => c.Id == student.CourseId, ct);
 
         if (course is null)
         {

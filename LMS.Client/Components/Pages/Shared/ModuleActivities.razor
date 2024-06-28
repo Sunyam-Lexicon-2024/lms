@@ -1,0 +1,49 @@
+@using BlazorBootstrap
+@using LMS.Core.Models
+
+<Accordion @ref="_activitiesAccordion">
+    @if (Activities is not null && Activities.Any())
+    {
+        @foreach (var ma in Activities)
+        {
+            <AccordionItem>
+                <TitleTemplate>
+                    @ma.Name
+                </TitleTemplate>
+                <Content>
+                    <div class="d-flex flex-row justify-content-between">
+                        <div><strong>Period:</strong></div>
+                        <div>
+                                @ma.StartDate - @ma.EndDate
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mt-2">
+                            @(ma.Description?.Length > 100 ? $"{ma.Description.Substring(0, 100)}..." : ma.Description ?? "No description available")
+                    </div>
+                </Content>
+            </AccordionItem>
+        }
+    }
+    else
+    {
+        <div class="alert alert-primary" role="alert">No courses available</div>
+    }
+</Accordion>
+
+@code {
+
+    [Parameter]
+    public IEnumerable<ModuleActivityBaseModel>? Activities { get; set; }
+    
+    [Parameter]
+    public string? ModuleTitle {get;set;} 
+
+    private Accordion _activitiesAccordion =default!;
+    
+    public async Task Collapse() 
+    {
+       await _activitiesAccordion.HideAllAccordionItemsAsync();
+    }
+
+}
