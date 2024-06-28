@@ -1,16 +1,16 @@
-﻿namespace Users.Students.GetCourse;
+﻿namespace Courses.GetCourse;
 
 public class Request
 {
-    public string StudentId { get; set; }
+    public int CourseId { get; set; }
 }
 
 public class Response
 {
-    public StudentCourseBaseModel StudentCourse { get; set; }
+    public CourseResponseModel StudentCourse { get; set; }
 }
 
-public class StudentCourseBaseModel
+public class CourseResponseModel
 {
     public string Name { get; set; }
     public string Description { get; set; }
