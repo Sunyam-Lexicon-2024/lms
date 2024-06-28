@@ -1,25 +1,38 @@
-﻿namespace Modules.CreateModule;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 
-public class Endpoint : Endpoint<CreateModuleModel, Response, Mapper>
+namespace Modules.CreateModule;
+
+public class Endpoint : Endpoint<
+    Request,
+    Results<Ok<Response>, BadRequest<string>>,
+    Mapper>
 {
     public override void Configure()
     {
-        Post("/modules");
-
+        Post("/courses/modules/create-module");
+        
         Description(d =>
-         d.Produces<Response>(201, "application/json")
+         d.Produces<Response>(200, "application/json")
         );
 
         // Swagger summary
         Summary(s =>
         {
             s.Summary = "Posts a module";
-            s.Description = "Gets the course for an authenticate student";
-            s.ResponseExamples[201] = "New module created";
+            s.Description = "Creates a new module";
+            s.ExampleRequest = new Request()
+            {
+                Name = "My Module",
+                Description = "My Module Description",
+                ParentId = 2,
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(2))
+            };
+            s.ResponseExamples[200] = new Response() { ModuleId = 4, Name = "My Module" };
         });
     }
 
-    public override async Task HandleAsync(CreateModuleModel req, CancellationToken ct)
+    public override async Task<Results<Ok<Response>,BadRequest<string>>> ExecuteAsync(Request req, CancellationToken ct)
     {
         IDbContextFactory<LmsDbContext>? contextFactory = TryResolve<IDbContextFactory<LmsDbContext>>();
 
@@ -36,29 +49,31 @@ public class Endpoint : Endpoint<CreateModuleModel, Response, Mapper>
         if (course is null)
         {
             ThrowError($"No course found for student");
-            return; // Ensure method exits if there's an error
+        }
+
+        if (req.StartDate < course.StartDate || req.StartDate > course.EndDate)
+        {
+            AddError(r => r.StartDate, "Start date out of scope of course period");
+        }
+
+        if (req.EndDate > course.EndDate || req.EndDate < course.StartDate)
+        {
+            AddError(r => r.StartDate, "End date out of scope of course period");
         }
 
         var newModule = Map.ToEntity(req);
 
         // Save the new module to database.
-        await context.CourseElements.AddAsync(newModule);
+        var createdModule = await context.CourseElements.AddAsync(newModule);
         await context.SaveChangesAsync(ct);
 
+        var module = createdModule.Entity as Module;
 
-        // Return the location header only
-        var location = $"/courses/{req.CreateModuleBaseModel.ParentId}/modules";
-        //Response.Headers.Add("Location", location);
+        if (module is not null)
+        {
+            return TypedResults.Ok(Map.FromEntity(module));
+        }
 
-        // Send 201 Created status with no body
-        //await SendCreatedAtAsync(location, null, [get], cancellation: ct);
-
-        // Set the Location header with HTTP verb information
-        HttpContext.Response.Headers.Add("Location", location);
-        HttpContext.Response.Headers.Add("Allow", "GET"); // Add Allow header for HTTP verb
-
-        // Send 201 Created status with no body
-        await SendAsync(new()
-        {},cancellation: ct); // Specify 'object' explicitly
+        return TypedResults.BadRequest("Could not create the Module ");
     }
 }
