@@ -1,85 +1,89 @@
 ﻿@inject HttpClient ApiClient
+@inject ToastService ToastService
 
-<h3>Add a new Course</h3>
-<EditForm method="post" Model="CourseCreate" OnValidSubmit="AddCourse" FormName="CreateCourse" Enhance>
-        <div class="row pb-3">
-            <div class="col-12">
-                <label for="name" class="form-label">Course name</label>
-                <InputText id="name" @bind-Value="CourseCreate.Name" class="form-control" placeholder="Enter course name" />
-                <ValidationMessage For="() => CourseCreate.Name" class="text-danger" />
-            </div>
-        </div>
-    <div class="row pb-3">
-            <div class="col-12">
-                <label for="description" class="form-label">Description</label>
-                <InputTextArea id="description" @bind-Value="CourseCreate.Description" class="form-control" maxlength="1024" placeholder="Add a course description." />
-                <ValidationMessage For="() => CourseCreate.Description" class="text-danger" />
-            </div>
-        </div>
-    <div class="row pb-3">
-            <div class="col-6">
-                <label for="startdate" class="form-label">Start date</label>
-                <InputDate id="startdate" @bind-Value="CourseCreate.StartDate" class="form-control" min="@CourseCreate.StartDate" />
-                <ValidationMessage For="() => CourseCreate.StartDate" class="text-danger" />
-            </div>
-        <div class="col-6">
+<div class="row">
+    <div class="col-12">
+        <p class="d-inline-flex gap-1">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddCourse" aria-expanded="false" aria-controls="collapseAddCourse">
+                Add a new Course
+            </button>
+        </p>
+        <div class="collapse" id="collapseAddCourse">
+            <h3>Add a new Course</h3>
+            <EditForm method="post" Model="CourseCreate" OnValidSubmit="AddCourse" FormName="CreateCourse" Enhance>
+                <DataAnnotationsValidator />
+                <div class="row pb-3">
+                    <div class="col-12">
+                        <label for="name" class="form-label">Course name</label>
+                        <InputText id="name" @bind-Value="CourseCreate.Name" class="form-control" placeholder="Enter course name" />
+                        <ValidationMessage For="() => CourseCreate.Name" class="text-danger" />
+                    </div>
+                </div>
+                <div class="row pb-3">
+                    <div class="col-12">
+                        <label for="description" class="form-label">Description</label>
+                        <InputTextArea id="description" @bind-Value="CourseCreate.Description" class="form-control" maxlength="1024" placeholder="Add a course description." />
+                        <ValidationMessage For="() => CourseCreate.Description" class="text-danger" />
+                    </div>
+                </div>
+                <div class="row pb-3">
+                    <div class="col-6">
+                        <label for="startdate" class="form-label">Start date</label>
+                        <InputDate id="startdate" @bind-Value="CourseCreate.StartDate" class="form-control" min="@CourseCreate.StartDate" />
+                        <ValidationMessage For="() => CourseCreate.StartDate" class="text-danger" />
+                    </div>
+                    <div class="col-6">
 
-                <label for="enddate" class="form-label">End date</label>
-                <InputDate id="enddate" @bind-Value="CourseCreate.EndDate" class="form-control" min="@CourseCreate.StartDate" />
-                <ValidationMessage For="() => CourseCreate.EndDate" class="text-danger" />
-            </div>
+                        <label for="enddate" class="form-label">End date</label>
+                        <InputDate id="enddate" @bind-Value="CourseCreate.EndDate" class="form-control" min="@CourseCreate.StartDate" />
+                        <ValidationMessage For="() => CourseCreate.EndDate" class="text-danger" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </EditForm>
         </div>
-    <div class="row">
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
-</EditForm>
 
+    </div>
+</div>
 
 @code {
 
     [SupplyParameterFromForm]
     public CourseCreateModel CourseCreate { get; set; } = new();
 
-    // private ApiErrorResponseModel? _errorResponse;
+    private ApiErrorResponseModel? _errorResponse;
+
 
 
     protected async Task AddCourse()
     {
-        // _machineRepository.Add(Machine);
-
-        // await LoadMachinesAsync(); // Update list content
-        // Machine = new Machine(); // Empties the fields and sets up for new additions
-
-
-
-
-
         var response = await ApiClient.PostAsJsonAsync<CourseCreateModel>("courses", CourseCreate);
 
-        // if (!response.IsSuccessStatusCode)
-        // {
-        //     try
-        //     {
-        //         _errorResponse = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>()!;
-        //         ToastService.Notify(new(ToastType.Danger, $"Could not create activity'{_createActivityFormModel.Name}'."));
-        //     }
-        //     catch
-        //     {
-        //         _errorResponse = new()
-        //             {
-        //                 Errors = new Dictionary<string, List<string>>() { { "Unexpected error", [await response.Content.ReadAsStringAsync()] } }
-        //             };
-        //         ToastService.Notify(new(ToastType.Danger, $"Unexpected error: '{_createActivityFormModel.Name}'."));
-        //     }
-        // }
-        // else
-        // {
-        //     ToastService.Notify(new(ToastType.Success, $"Activity '{_createActivityFormModel.Name}' successfully."));
-        //     _createActivityFormModel = new();
-        //     _errorResponse = null;
-        //     await SetCourse();
-        // }
+        if (!response.IsSuccessStatusCode)
+        {
+            try
+            {
+                _errorResponse = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>()!;
+                ToastService.Notify(new(ToastType.Danger, $"Could not create activity'{CourseCreate.Name}'."));
+            }
+            catch
+            {
+                _errorResponse = new()
+                    {
+                        Errors = new Dictionary<string, List<string>>() { { "Unexpected error", [await response.Content.ReadAsStringAsync()] } }
+                    };
+                ToastService.Notify(new(ToastType.Danger, $"Unexpected error: '{CourseCreate.Name}'."));
+            }
+        }
+        else
+        {
+            ToastService.Notify(new(ToastType.Success, $"Activity '{CourseCreate.Name}' successfully."));
+            CourseCreate = new();
+            _errorResponse = null;
+        }
     }
 }
