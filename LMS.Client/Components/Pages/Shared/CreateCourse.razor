@@ -61,7 +61,7 @@
 
     protected async Task AddCourse()
     {
-        var response = await ApiClient.PostAsJsonAsync<CourseCreateModel>("courses", CourseCreate);
+        var response = await ApiClient.PostAsJsonAsync<CourseCreateModel>("courses/create-course", CourseCreate);
 
         if (!response.IsSuccessStatusCode)
         {

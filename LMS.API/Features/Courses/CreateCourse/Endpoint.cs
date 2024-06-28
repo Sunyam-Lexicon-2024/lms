@@ -12,7 +12,7 @@ public class Endpoint : Endpoint<CoursePostModel,
 
     public override void Configure()
     {
-        Post("/courses");
+        Post("/courses/create-course");
     }
 
     public override async Task<Results<Ok<Response>,BadRequest<string>>> ExecuteAsync(CoursePostModel request, CancellationToken ct)
