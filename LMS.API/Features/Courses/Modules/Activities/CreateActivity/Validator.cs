@@ -7,7 +7,7 @@ public class Validator : Validator<Request>
         RuleFor(r => r.Name)
             .NotEmpty()
             .WithMessage("Activity name required")
-            .MinimumLength(10)
+            .MinimumLength(5)
             .WithMessage("Activity name is too short")
             .MaximumLength(50)
             .WithMessage("Activity name is too long");
