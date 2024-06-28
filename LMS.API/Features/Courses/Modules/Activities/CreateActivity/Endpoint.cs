@@ -22,8 +22,8 @@ public class Endpoint : Endpoint<
             s.Description = "Creates a new module activity by the specified values in the request ";
             s.ExampleRequest = new Request()
             {
-                Name = "My Module",
-                Description = "My Module Description",
+                Name = "My Module Activity",
+                Description = "My Module Activity Description",
                 ParentId = 10,
                 Type = ActivityType.ELearning,
                 StartDate = DateOnly.FromDateTime(DateTime.UtcNow),
