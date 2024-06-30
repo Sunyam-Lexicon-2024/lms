@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Components\Pages\Shared\Forms\CreateModuleForm.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Data\app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
   </ItemGroup>
 
@@ -28,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Components\Pages\Shared\Forms\CreateModuleForm.razor" />
     <None Include="Components\Pages\Shared\StudentCourse.razor" />
   </ItemGroup>
 
