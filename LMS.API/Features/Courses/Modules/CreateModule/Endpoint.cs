@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace Modules.CreateModule;
+namespace LMS.API.Features.Courses.Modules.CreateModule;
 
 public class Endpoint : Endpoint<
     Request,
@@ -10,7 +10,7 @@ public class Endpoint : Endpoint<
     public override void Configure()
     {
         Post("/courses/modules/create-module");
-        
+
         Description(d =>
          d.Produces<Response>(200, "application/json")
         );
@@ -18,8 +18,8 @@ public class Endpoint : Endpoint<
         // Swagger summary
         Summary(s =>
         {
-            s.Summary = "Posts a module";
-            s.Description = "Creates a new module";
+            s.Summary = "Creates a module";
+            s.Description = "Creates a new module by the specified values in the request";
             s.ExampleRequest = new Request()
             {
                 Name = "My Module",
@@ -32,7 +32,7 @@ public class Endpoint : Endpoint<
         });
     }
 
-    public override async Task<Results<Ok<Response>,BadRequest<string>>> ExecuteAsync(Request req, CancellationToken ct)
+    public override async Task<Results<Ok<Response>, BadRequest<string>>> ExecuteAsync(Request req, CancellationToken ct)
     {
         IDbContextFactory<LmsDbContext>? contextFactory = TryResolve<IDbContextFactory<LmsDbContext>>();
 

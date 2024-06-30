@@ -1,4 +1,4 @@
-﻿namespace Modules.CreateModule;
+﻿namespace LMS.API.Features.Courses.Modules.CreateModule;
 
 public class Mapper : Mapper<Request, Response, Module>
 {
@@ -17,9 +17,9 @@ public class Mapper : Mapper<Request, Response, Module>
     public override Response FromEntity(Module m)
     {
         return new Response()
-        { 
+        {
             ModuleId = m.Id,
             Name = m.Name
-        };     
+        };
     }
 }
