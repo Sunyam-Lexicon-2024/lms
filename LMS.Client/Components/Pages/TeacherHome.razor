@@ -6,6 +6,21 @@
 
 [Teacher Courses]
 
+@* CREATE A NEW MODULE *@
+<Button Color="ButtonColor.Success" TooltipTitle="Create a new module"
+        @onclick="ShowCreateModuleFormModal">
+    Placeholder Create Module Button
+</Button>
+
+<Modal @ref="_createModuleFormModal" Title="Create New Module"
+    HeaderCssClass="d-flex flex-row justify-content-between">
+    <BodyTemplate>
+        <CreateModuleForm />
+
+    </BodyTemplate>
+</Modal>
+
+@* CREATE A NEW ACTIVITY *@
 <Button Color="ButtonColor.Primary" TooltipTitle="Create a new activity"
     @onclick="ShowCreateActivityFormModal">Placeholder Create Activity Button</Button>
 
@@ -17,12 +32,19 @@
 </Modal>
 
 
+
 @code {
 
     private Modal _createActivityFormModal = default!;
+    private Modal _createModuleFormModal = default!;
 
     private async Task ShowCreateActivityFormModal()
     {
         await _createActivityFormModal.ShowAsync();
+    }
+    
+    private async Task ShowCreateModuleFormModal()
+    {
+        await _createModuleFormModal.ShowAsync();
     }
 }
