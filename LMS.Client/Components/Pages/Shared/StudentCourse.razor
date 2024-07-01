@@ -15,7 +15,7 @@
             {
                 <h3>Current Course</h3>
                 <Card class="mb-4">
-                    <CardHeader class="pb-0"  Color="CardColor.Secondary">
+                    <CardHeader class="pb-0" Color="CardColor.Secondary">
                         <h5>@_studentCourse.Name</h5>
                     </CardHeader>
                     <CardBody>
@@ -53,24 +53,24 @@
         {
             var authState = await authenticationState;
             var user = authState.User;
-            var targetUser = await UserManager.GetUserAsync(user);
+            var courseId = user.Claims.Where(c => c.Type == "Course")
+            .Select(c => c.Value)
+            .SingleOrDefault();
 
-            if (targetUser is not null)
+            try
             {
-                try
+                var response = await ApiClient.GetFromJsonAsync<Response>($"courses/{courseId}/get-course");
+                if (response != null && response.StudentCourse != null)
                 {
-                    var response = await ApiClient.GetFromJsonAsync<Response>($"users/students/{targetUser.Id}/course");
-                    if (response != null && response.StudentCourse != null)
-                    {
-                        _studentCourse = response.StudentCourse;
-                    }
+                    _studentCourse = response.StudentCourse;
+                }
 
-                    _dataLoaded = true;
-                }
-                catch
-                {
-                    _apiAvailable = false;
-                }
+                _apiAvailable = true;
+                _dataLoaded = true;
+            }
+            catch
+            {
+                _apiAvailable = false;
             }
         }
     }

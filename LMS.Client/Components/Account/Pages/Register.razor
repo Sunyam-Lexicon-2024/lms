@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text
 @using System.Text.Encodings.Web
+@using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
@@ -123,12 +124,41 @@
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
-        var result = await UserManager.CreateAsync(user, Input.Password);
+        IdentityResult result;
+
+        result = await UserManager.CreateAsync(user, Input.Password);
         
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
             return;
+        }
+
+        if(user is Student student) 
+        {
+            result = await UserManager.AddToRoleAsync(user, "Student");
+            if(!result.Succeeded) 
+            {
+                    identityErrors = result.Errors;
+                    return;
+            }
+
+            result = await UserManager.AddClaimAsync(user, new Claim("Course", student.CourseId.ToString()!));
+            if(!result.Succeeded) 
+            {
+                    identityErrors = result.Errors;
+                    return;
+            }
+        }
+
+        if(user is Teacher teacher) 
+        {
+            result = await UserManager.AddToRoleAsync(user, "Faculty");
+            if(!result.Succeeded) 
+            {
+                    identityErrors = result.Errors;
+                    return;
+            }
         }
 
         Logger.LogInformation("User created a new account with password.");
