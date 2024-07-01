@@ -62,6 +62,5 @@ public static class WebAppExtensions
         await lmsDbContext.Database.MigrateAsync();
         await app.SeedIdentityRoles();
         await baseSeeds.InitAsync();
-
     }
 }

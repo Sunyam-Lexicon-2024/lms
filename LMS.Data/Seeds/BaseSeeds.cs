@@ -3,10 +3,12 @@ using Bogus;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LMS.Data.Seeds;
 
-public class BaseSeeds(
+public partial class BaseSeeds(
         LmsDbContext context,
         UserManager<User> userManager,
         IUserStore<User> userStore,
@@ -46,12 +48,14 @@ public class BaseSeeds(
             var emailStore = _userStore as IUserEmailStore<User> ?? throw new InvalidOperationException("Could not instantiate User Email Store from Email Store.");
             var pwd = "Development1!";
 
+            IdentityResult result;
+
             foreach (var u in _users)
             {
                 await emailStore.SetEmailAsync(u, u.Email, CancellationToken.None);
                 await _userStore.SetUserNameAsync(u, u.UserName, CancellationToken.None);
 
-                var result = await _userManager.CreateAsync(u, pwd);
+                result = await _userManager.CreateAsync(u, pwd);
 
                 if (result.Errors.Any())
                 {
@@ -160,14 +164,14 @@ public class BaseSeeds(
                 string first = _faker.Name.FirstName();
                 string last = _faker.Name.LastName();
                 string domain = _faker.Internet.DomainName();
-                string email = $"{first}.{last}@{domain}";
+                string email = AsciiEmail($"{first}.{last}@{domain}");
                 Teacher teacherToAdd = new()
                 {
                     Name = $"{first} {last}",
-                    Email = email.ToLower(),
-                    NormalizedEmail = email.ToUpper(),
-                    UserName = email.ToLower(),
-                    NormalizedUserName = email.ToUpper(),
+                    Email = email.ToLowerInvariant(),
+                    NormalizedEmail = email.ToUpperInvariant(),
+                    UserName = email.ToLowerInvariant(),
+                    NormalizedUserName = email.ToUpperInvariant(),
                     EmailConfirmed = true,
                     PhoneNumber = _faker.Phone.PhoneNumber(),
                     PhoneNumberConfirmed = true,
@@ -188,15 +192,15 @@ public class BaseSeeds(
                 string first = _faker.Name.FirstName();
                 string last = _faker.Name.LastName();
                 string domain = _faker.Internet.DomainName();
-                string email = $"{first}.{last}@{domain}";
+                string email = AsciiEmail($"{first}.{last}@{domain}");
                 Course course = _faker.PickRandom(courses);
                 Student studentToAdd = new()
                 {
                     Name = $"{first} {last}",
-                    Email = email.ToLower(),
-                    NormalizedEmail = email.ToUpper(),
-                    UserName = email.ToLower(),
-                    NormalizedUserName = email.ToUpper(),
+                    Email = email.ToLowerInvariant(),
+                    NormalizedEmail = email.ToUpperInvariant(),
+                    UserName = email.ToLowerInvariant(),
+                    NormalizedUserName = email.ToUpperInvariant(),
                     EmailConfirmed = true,
                     PhoneNumber = _faker.Phone.PhoneNumber(),
                     PhoneNumberConfirmed = true,
@@ -207,4 +211,12 @@ public class BaseSeeds(
             }
         });
     }
+
+    private static string AsciiEmail(string email)
+    {
+        return MyRegex().Replace(email, string.Empty);
+    }
+
+    [GeneratedRegex("[^a-zA-Z.@]+", RegexOptions.Compiled)]
+    private static partial Regex MyRegex();
 }
