@@ -1,115 +1,122 @@
 @using BlazorBootstrap
 @using LMS.Core.Entities
 @using LMS.Core.Models
-@inject HttpClient ApiClient
 @inject ModalService ModalService
-@inject ILogger<Document> Logger
+@inject HttpClient ApiClient
+@inject ILogger<UserDocuments> Logger
 
-<div style="padding-top:1rem;margin-top:1rem;">
+<div style="padding-top: 1rem; margin-top: 1rem;">
     <h3>Documents</h3>
-    <Accordion>
-        @if (!_apiAvailable)
+    <Accordion id="docs">
+        @if (!_isApiAvailable)
         {
             <Alert Color="AlertColor.Danger">API not available</Alert>
         }
+        else if (!_isDataLoaded)
+        {
+            <Alert Color="AlertColor.Primary">Loading...</Alert>
+        }
+        else if (!_documents.Any())
+        {
+            <Alert Color="AlertColor.Primary">No documents available</Alert>
+        }
         else
         {
-            @if (_dataLoaded)
+            @foreach (var document in _documents)
             {
-                if (_documents.Count() > 0)
-                {
-                    @foreach (var d in _documents)
-                    {
-                        <AccordionItem Title="@d.Name">
-                            <Content>
-                                <span><strong>Uploaded:</strong> @d.UploadedAt.ToString("yyyy-MM-dd")</span>
-                                <div class="d-flex flex-row my-2">
-                                    <span><strong>Title:</strong></span>
-                                    <span>@(d.Description?.Length > 100 ? $"{d.Description.Substring(0, 100)}..." : d.Description ?? "No description available")</span>
-                                </div>
-                                <button class="btn btn-primary my-2" @onclick="@(() => ShowModal(d))">View Details</button>
-                            </Content>
-                        </AccordionItem>
-                    }
-                }
-                else
-                {
-                    <Alert Color="AlertColor.Primary">No documents available</Alert>
-                }
-            }
-            else
-            {
-                <Alert Color="AlertColor.Primary">Loading...</Alert>
+                <AccordionItem Title="@document.Name">
+                    <Content>
+                        <span><strong>Uploaded:</strong> @document.UploadedAt.ToString("yyyy-MM-dd")</span>
+                        <div class="d-flex flex-row my-2">
+                            <span><strong>Description:</strong></span>
+                            <span>@(document.Description?.Length > 100 ? $"{document.Description.Substring(0, 100)}..." : document.Description ?? "No description available")</span>
+                        </div>
+                        <button class="btn btn-primary my-2" @onclick="@(() => ShowModal(document))">Document Details</button>
+                    </Content>
+                </AccordionItem>
             }
         }
     </Accordion>
 </div>
 
-<Modal @ref="_docModal" />
+
+<Modal 
+    @ref="_docModal" 
+    Title="@_docTitle" 
+    OnHiding="OnModalHidingAsync">
+    <BodyTemplate>
+        <div>
+            <p><span><strong>Description: </strong></span>@_docDesc</p>
+            <p><span><strong>Uploaded At: </strong></span>@_docUploadedAt.ToString("yyyy-MM-dd")</p>
+            <p><span><strong>Url: </strong></span>@_docUrl</p>
+        </div>
+    </BodyTemplate>
+</Modal>
 
 @code {
     [Parameter]
-    public string? UserId { get; set; }
+    public string UserId { get; set; } = "";
 
     private IEnumerable<DocumentBaseModel> _documents = Enumerable.Empty<DocumentBaseModel>();
-    private Modal? _docModal;
-    private bool _apiAvailable = true;
-    private bool _dataLoaded = false;
-    private string? _docTitle;
-    @* private DocumentBaseModel? _currentDocument; *@
+    private bool _isApiAvailable = true;
+    private bool _isDataLoaded = false;
+    private Modal _docModal = default!;
+
+    private string _docTitle = "";
+    private string _docDesc = "";
+    private DateTime _docUploadedAt = default!;
+    private string _docUrl = "";
 
     protected override async Task OnInitializedAsync()
     {
         if (!string.IsNullOrEmpty(UserId))
         {
-            try
+            await FetchDocumentsAsync(UserId);
+        }
+    }
+
+    private async Task FetchDocumentsAsync(string userId)
+    {
+        try
+        {
+            Logger.LogInformation($"Fetching documents for UserId: {userId}");
+            var response = await ApiClient.GetFromJsonAsync<DocumentsResponse>($"/api/documents/get-user-documents/{userId}");
+            if (response?.Documents != null)
             {
-                Console.WriteLine($"Fetching documents for UserId: {UserId}");
-                var response = await ApiClient.GetFromJsonAsync<Response>($"/api/documents/get-user-documents/{UserId}");
-                if (response?.Documents != null)
-                {
-                    _documents = response.Documents;
-                    _dataLoaded = true;
-                    Console.WriteLine($"Fetched {_documents.Count()} documents.");
-                }
-                else
-                {
-                    _apiAvailable = false;
-                    Console.Error.WriteLine("API response is null or documents are null");
-                }
+                _documents = response.Documents;
+                _isDataLoaded = true;
+                Logger.LogInformation($"Fetched {_documents.Count()} documents.");
             }
-            catch (HttpRequestException httpRequestException)
+            else
             {
-                _apiAvailable = false;
-                Console.Error.WriteLine($"Request error: {httpRequestException.Message}");
+                _isApiAvailable = false;
+                Logger.LogError("API response is null or documents are null");
             }
+        }
+        catch (Exception ex)
+        {
+            _isApiAvailable = false;
+            Logger.LogError(ex, "Error fetching documents");
         }
     }
 
     private async Task ShowModal(DocumentBaseModel document)
     {
-        if (document is not null)
-        {
-            _docTitle = document.Name;
-            var parameters = new Dictionary<string, object>();
-            parameters.Add("Description", document.Description);
-            parameters.Add("Uploaded", document.UploadedAt);
-            parameters.Add("Url", document.Url);
 
-            if (_docModal != null)
-            {
-                await _docModal.ShowAsync<DocumentBaseModel>(title: _docTitle, parameters: parameters);
-            }
-        }
-        
+        _docTitle = document.Name;
+        _docDesc = document.Description;
+        _docUrl = document.Url;
+        _docUploadedAt = document.UploadedAt;
+        await _docModal.ShowAsync();
     }
 
-    private void HideModal()
+     private async Task OnModalHidingAsync()
     {
-        _docModal?.HideAsync();
+        await _docModal.HideAsync();
     }
 
-    private class Response
+
+    private class DocumentsResponse
     {
         public IEnumerable<DocumentBaseModel>? Documents { get; set; }
     }
