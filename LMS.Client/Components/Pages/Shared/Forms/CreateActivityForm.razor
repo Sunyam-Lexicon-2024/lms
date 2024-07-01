@@ -16,15 +16,15 @@
             <EditForm Model="_createActivityFormModel" OnSubmit="Submit" FormName="CreateActivityForm">
                 <div class="mb-3 d-flex flex-column">
                     <label class="form-label"><strong>Name</strong></label>
-                    <InputText @bind-Value="_createActivityFormModel!.Name" placeholder="Enter name..." />
+                    <InputText @bind-Value="_createActivityFormModel!.Name" placeholder="Enter name..." class="form-control" />
                 </div>
                 <div class="mb-3 d-flex flex-column">
                     <label class="form-label"><strong>Description</strong></label>
-                    <InputText @bind-Value="_createActivityFormModel!.Description" placeholder="Enter description..." />
+                    <InputText @bind-Value="_createActivityFormModel!.Description" placeholder="Enter description..." class="form-control" />
                 </div>
                 <div class="mb-3 d-flex flex-column">
                     <label class="form-label"><strong>Type</strong></label>
-                    <InputSelect @bind-Value="_createActivityFormModel.Type">
+                    <InputSelect @bind-Value="_createActivityFormModel.Type" class="form-control">
                         @foreach (var t in Enum.GetValues<ActivityType>())
                         {
                             <option value="@t">@t</option>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="mb-3 d-flex flex-column">
                     <label class="form-label"><strong>Course</strong></label>
-                    <InputSelect @bind-Value="_selectedCourseId" @bind-Value:after="SetCourse">
+                    <InputSelect @bind-Value="_selectedCourseId" @bind-Value:after="SetCourse" class="form-control">
                         @foreach (var c in _courses!)
                         {
                             <option value="@c.CourseId">@c.Name</option>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="mb-3 d-flex flex-column">
                     <label class="form-label"><strong>Module</strong></label>
-                    <InputSelect @bind-Value="_createActivityFormModel.ParentId">
+                    <InputSelect @bind-Value="_createActivityFormModel.ParentId" class="form-control">
                         @foreach (var m in _modules!)
                         {
                             <option value="@m.ModuleId">@m.Name</option>
