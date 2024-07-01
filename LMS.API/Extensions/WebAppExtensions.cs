@@ -22,10 +22,10 @@ public static class WebAppExtensions
             })
             .UseSwaggerGen();
 
-            //if (Environment.GetEnvironmentVariable("SEED_DATA") == "1")
-            //{
-            //    await app.SeedDataAsync();
-            //}
+            if (Environment.GetEnvironmentVariable("SEED_DATA") == "1")
+            {
+                await app.SeedDataAsync();
+            }
         }
         else
         {
