@@ -1,5 +1,4 @@
 using LMS.Data.DbContexts;
-using LMS.Core.Entities;
 using Bogus;
 using Microsoft.AspNetCore.Identity;
 
