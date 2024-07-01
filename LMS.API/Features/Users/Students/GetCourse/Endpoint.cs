@@ -23,6 +23,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         });
     }
 
+
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         IDbContextFactory<LmsDbContext>? contextFactory = TryResolve<IDbContextFactory<LmsDbContext>>();
