@@ -1,0 +1,33 @@
+﻿@inject HttpClient ApiClient
+@inject UserManager<User> UserManager
+
+<div>
+    @if (_dataLoaded)
+    {
+        @foreach (var course in _courses)
+        {
+            <Card class="mb-4">
+                <CarHeader class="pb-0" Color="CardColor.Secondary">
+                    <h5>@course.Name</h5>
+                </CarHeader>
+                <CardBody>
+
+                </CardBody>
+            </Card>
+        }
+    }
+</div>
+
+@code {
+    private IEnumerable<CourseBaseModel> _courses = new List();
+
+    protected async override Task OnInitializedAsync()
+    { 
+        var response = await ApiClient.GetFromJsonAsync<IEnumerable<CourseBaseModel>>($"course/get-all-course");
+        if (response != null)
+        {
+            _courses = response;
+            _dataLoaded = true;
+        }
+    }
+}
