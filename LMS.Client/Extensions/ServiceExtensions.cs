@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using LMS.Client.Components.Account;
 using LMS.Data.DbContexts;
 using LMS.Client.Stores;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace LMS.Client.Extensions;
 
 public static class ServiceExtensions
@@ -45,6 +46,7 @@ public static class ServiceExtensions
 
         services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddUserStore<LmsUserStore>()
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<LmsDbContext>()
             .AddSignInManager()
             .AddDefaultTokenProviders();

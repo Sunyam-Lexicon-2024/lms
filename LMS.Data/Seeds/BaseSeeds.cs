@@ -1,10 +1,18 @@
 using LMS.Data.DbContexts;
 using Bogus;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LMS.Data.Seeds;
 
-public class BaseSeeds(LmsDbContext context)
+public partial class BaseSeeds(
+        LmsDbContext context,
+        UserManager<User> userManager,
+        IUserStore<User> userStore,
+        ILogger<BaseSeeds> logger)
 {
 
     private readonly List<User> _users = [];
@@ -12,8 +20,11 @@ public class BaseSeeds(LmsDbContext context)
     private readonly List<Module> _modules = [];
     private readonly List<ModuleActivity> _activities = [];
 
+    private readonly UserManager<User> _userManager = userManager;
+    private readonly IUserStore<User> _userStore = userStore;
     private readonly LmsDbContext _context = context;
     private readonly Faker _faker = new();
+    private readonly ILogger<BaseSeeds> _logger = logger;
 
     public async Task InitAsync()
     {
@@ -33,8 +44,38 @@ public class BaseSeeds(LmsDbContext context)
 
             await GenerateStudents(50);
             await GenerateTeachers(5);
-            await _context.Users.AddRangeAsync(_users);
-            await _context.SaveChangesAsync();
+
+            var emailStore = _userStore as IUserEmailStore<User> ?? throw new InvalidOperationException("Could not instantiate User Email Store from Email Store.");
+            var pwd = "Development1!";
+
+            IdentityResult result;
+
+            foreach (var u in _users)
+            {
+                await emailStore.SetEmailAsync(u, u.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(u, u.UserName, CancellationToken.None);
+
+                result = await _userManager.CreateAsync(u, pwd);
+
+                if (result.Errors.Any())
+                {
+                    foreach (var e in result.Errors)
+                    {
+                        _logger.LogError("{Error}", e);
+                    }
+                }
+
+                if (u is Student student)
+                {
+                    await _userManager.AddToRoleAsync(u, "Student");
+                    await _userManager.AddClaimAsync(u, new Claim("Course", student.CourseId.ToString()!));
+                }
+
+                if (u is Teacher teacher)
+                {
+                    await _userManager.AddToRoleAsync(u, "Faculty");
+                }
+            }
         }
         catch (Exception)
         {
@@ -123,23 +164,19 @@ public class BaseSeeds(LmsDbContext context)
                 string first = _faker.Name.FirstName();
                 string last = _faker.Name.LastName();
                 string domain = _faker.Internet.DomainName();
-                string email = $"{first}.{last}@{domain}";
-                var password = new PasswordHasher<Teacher>();
+                string email = AsciiEmail($"{first}.{last}@{domain}");
                 Teacher teacherToAdd = new()
                 {
                     Name = $"{first} {last}",
-                    Email = email.ToLower(),
-                    NormalizedEmail = email.ToUpper(),
-                    UserName = email.ToLower(),
-                    NormalizedUserName = email.ToUpper(),
+                    Email = email.ToLowerInvariant(),
+                    NormalizedEmail = email.ToUpperInvariant(),
+                    UserName = email.ToLowerInvariant(),
+                    NormalizedUserName = email.ToUpperInvariant(),
                     EmailConfirmed = true,
                     PhoneNumber = _faker.Phone.PhoneNumber(),
                     PhoneNumberConfirmed = true,
-                    SecurityStamp = Guid.NewGuid().ToString("D"),
                 };
                 teacherToAdd.Courses.Add(_faker.PickRandom(courses));
-                var hashed = password.HashPassword(teacherToAdd, "secret");
-                teacherToAdd.PasswordHash = hashed;
                 _users.Add(teacherToAdd);
             }
         });
@@ -155,27 +192,31 @@ public class BaseSeeds(LmsDbContext context)
                 string first = _faker.Name.FirstName();
                 string last = _faker.Name.LastName();
                 string domain = _faker.Internet.DomainName();
-                string email = $"{first}.{last}@{domain}";
-                var password = new PasswordHasher<Student>();
+                string email = AsciiEmail($"{first}.{last}@{domain}");
                 Course course = _faker.PickRandom(courses);
                 Student studentToAdd = new()
                 {
                     Name = $"{first} {last}",
-                    Email = email.ToLower(),
-                    NormalizedEmail = email.ToUpper(),
-                    UserName = email.ToLower(),
-                    NormalizedUserName = email.ToUpper(),
+                    Email = email.ToLowerInvariant(),
+                    NormalizedEmail = email.ToUpperInvariant(),
+                    UserName = email.ToLowerInvariant(),
+                    NormalizedUserName = email.ToUpperInvariant(),
                     EmailConfirmed = true,
                     PhoneNumber = _faker.Phone.PhoneNumber(),
                     PhoneNumberConfirmed = true,
-                    SecurityStamp = Guid.NewGuid().ToString("D"),
                     CourseId = course.Id,
                     Course = course
                 };
-                var hashed = password.HashPassword(studentToAdd, "secret");
-                studentToAdd.PasswordHash = hashed;
                 _users.Add(studentToAdd);
             }
         });
     }
+
+    private static string AsciiEmail(string email)
+    {
+        return MyRegex().Replace(email, string.Empty);
+    }
+
+    [GeneratedRegex("[^a-zA-Z.@]+", RegexOptions.Compiled)]
+    private static partial Regex MyRegex();
 }
