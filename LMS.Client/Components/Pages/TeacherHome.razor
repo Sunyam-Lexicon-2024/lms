@@ -1,4 +1,5 @@
 ﻿@page "/Teacher/"
+@inject UserManager<User> UserManager
 @attribute [Authorize(Roles = "Admin, Faculty")]
 
 
@@ -34,8 +35,23 @@
 
 <CreateCourse />
 
+<CreateCourse />
+
+
+
+
+<TeacherCourses UserId="@_userId"/>
+
+
+<UserDocuments UserId="@_userId" />
 
 @code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? _authenticationState { get; set; }
+
+    private string? _userId;
+
 
     private Modal _createActivityFormModal = default!;
     private Modal _createModuleFormModal = default!;
@@ -48,5 +64,20 @@
     private async Task ShowCreateModuleFormModal()
     {
         await _createModuleFormModal.ShowAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (_authenticationState is not null)
+        {
+            var authState = await _authenticationState;
+            var user = authState.User;
+            var targetUser = await UserManager.GetUserAsync(user);
+
+            if (targetUser is Teacher Teacher)
+            {
+                _userId = Teacher.Id;
+            }
+        }
     }
 }

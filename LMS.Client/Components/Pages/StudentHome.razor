@@ -17,12 +17,15 @@ else
     <div class="alert alert-info" role="alert">Student not enrolled in course</div>
 }
 
+<UserDocuments UserId="@_userId" />
+
 @code {
 
     [CascadingParameter]
     private Task<AuthenticationState>? _authenticationState { get; set; }
 
     private int? _courseId;
+    private string? _userId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -35,6 +38,7 @@ else
             if (targetUser is Student student)
             {
                 _courseId = student.CourseId;
+                _userId = student.Id;
             }
         }
     }

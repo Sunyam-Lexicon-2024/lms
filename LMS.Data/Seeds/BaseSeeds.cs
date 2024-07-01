@@ -17,6 +17,7 @@ public partial class BaseSeeds(
 
     private readonly List<User> _users = [];
     private readonly List<Course> _courses = [];
+    private readonly List<Document> _documents = [];
     private readonly List<Module> _modules = [];
     private readonly List<ModuleActivity> _activities = [];
 
@@ -76,6 +77,7 @@ public partial class BaseSeeds(
                     await _userManager.AddToRoleAsync(u, "Faculty");
                 }
             }
+            await GenerateDocuments(100);
         }
         catch (Exception)
         {
@@ -211,6 +213,49 @@ public partial class BaseSeeds(
             }
         });
     }
+
+    // Generate Documents
+     private async Task GenerateDocuments(int count)
+    {
+        var users = _context.Users.ToList();
+        var courseElements = _context.CourseElements.OfType<Course>().ToList();
+
+        if (users.Count == 0 || courseElements.Count == 0)
+        {
+            throw new InvalidOperationException("Users or CourseElements are not available for generating documents.");
+        }
+
+        await Task.Run(async () =>
+        {
+            for (int i = 0; i < count; i++)
+            {
+                string name = _faker.Lorem.Sentence();
+                string url = _faker.Internet.Url();
+                string description = _faker.Lorem.Paragraph();
+                DateTime uploadedAt = _faker.Date.Past(1);
+                User uploader = _faker.PickRandom(users);
+                CourseElement courseElement = _faker.PickRandom(courseElements);
+
+                Document documentToAdd = new()
+                {
+                    Name = name,
+                    Url = url,
+                    Description = description,
+                    UploadedAt = uploadedAt,
+                    CourseElementId = courseElement.Id,
+                    CourseElement = courseElement,
+                    UploaderId = uploader.Id,
+                    User = uploader
+                };
+
+                _documents.Add(documentToAdd);
+            }
+            _context.Documents.AddRange(_documents);
+            await _context.SaveChangesAsync();
+        });
+    }
+
+
 
     private static string AsciiEmail(string email)
     {
