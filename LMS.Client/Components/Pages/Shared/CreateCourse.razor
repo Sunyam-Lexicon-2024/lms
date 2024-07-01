@@ -45,6 +45,22 @@
                     </div>
                 </div>
             </EditForm>
+            @if (_errorResponse is not null && _errorResponse.Errors!.Count > 0)
+            {
+                <Alert class="d-flex flex-column mt-2" Color="AlertColor.Danger">
+                    <Icon Name="IconName.ExclamationTriangleFill" />
+                    <p><strong>Validation failed</strong></p>
+                    <hr>
+                    @foreach (var (property, errors) in _errorResponse.Errors)
+                    {
+                        <p><strong>@property</strong></p>
+                        foreach (var e in errors)
+                        {
+                            <p>@e</p>
+                        }
+                    }
+                </Alert>
+            }
         </div>
 
     </div>
@@ -68,7 +84,7 @@
             try
             {
                 _errorResponse = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>()!;
-                ToastService.Notify(new(ToastType.Danger, $"Could not create activity'{CourseCreate.Name}'."));
+                ToastService.Notify(new(ToastType.Danger, $"Could not create Course '{CourseCreate.Name}'."));
             }
             catch
             {
@@ -81,7 +97,7 @@
         }
         else
         {
-            ToastService.Notify(new(ToastType.Success, $"Activity '{CourseCreate.Name}' successfully."));
+            ToastService.Notify(new(ToastType.Success, $"Course '{CourseCreate.Name}' successfully."));
             CourseCreate = new();
             _errorResponse = null;
         }
