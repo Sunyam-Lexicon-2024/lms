@@ -1,0 +1,6 @@
+@UserId = db3a8aa6-df7d-4b62-8fb1-eda6195cf14a
+
+@GetDoc = http://localhost:5000/api/users/teachers/{{UserId}}/get-all-documents
+
+GET {{GetDoc}}
+Accept: application/json
