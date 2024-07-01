@@ -22,8 +22,10 @@ public static class IdentityExtensions
 
         var superUser = new User
         {
+            Name = app.Configuration["Identity:SuperUser:Name"]!,
             UserName = app.Configuration["Identity:SuperUser:Email"],
             Email = app.Configuration["Identity:SuperUser:Email"],
+            EmailConfirmed = true,
         };
 
         var userExists = await userManager.FindByEmailAsync(superUser.Email!);
@@ -34,7 +36,6 @@ public static class IdentityExtensions
             if (createPowerUser.Succeeded)
             {
                 await userManager.AddToRoleAsync(superUser, "Admin");
-
             }
         }
 
