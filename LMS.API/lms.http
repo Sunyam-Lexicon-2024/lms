@@ -1,0 +1,22 @@
+@Base = http://localhost:5000/api/documents
+
+@UserId = 4820ae13-ac1f-4e13-b16a-6b95f01b1456
+
+@Id = 1
+
+# Get Document with Id
+@GetDoc = {{Base}}/{{UserId}}/get-document-by-id/{{Id}}
+
+GET {{GetDoc}}
+Accept: application/json
+
+###
+
+
+# Get all of user's documents
+
+@GetUserDocs = {{Base}}/get-user-documents/{{UserId}}
+
+
+GET {{GetUserDocs}}
+Accept: application/json
