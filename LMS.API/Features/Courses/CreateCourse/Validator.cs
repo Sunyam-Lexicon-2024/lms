@@ -7,7 +7,7 @@ public class Validator : Validator<CoursePostModel>
         RuleFor(c => c.Name)
             .NotEmpty().WithMessage("A course name is required!")
             .MaximumLength(255).WithMessage("The course name is too long!")
-            .MinimumLength(255).WithMessage("The course name must be at least 3 chractrs to be identifiable!");
+            .MinimumLength(3).WithMessage("The course name must be at least 3 chractrs to be identifiable!");
 
         RuleFor(c => c.Description)
             .NotEmpty().WithMessage("A description is required!");

@@ -16,27 +16,24 @@
                     <div class="col-12">
                         <label for="name" class="form-label">Course name</label>
                         <InputText id="name" @bind-Value="CourseCreate.Name" class="form-control" placeholder="Enter course name" />
-                        <ValidationMessage For="() => CourseCreate.Name" class="text-danger" />
                     </div>
                 </div>
                 <div class="row pb-3">
                     <div class="col-12">
                         <label for="description" class="form-label">Description</label>
                         <InputTextArea id="description" @bind-Value="CourseCreate.Description" class="form-control" maxlength="1024" placeholder="Add a course description." />
-                        <ValidationMessage For="() => CourseCreate.Description" class="text-danger" />
                     </div>
                 </div>
                 <div class="row pb-3">
                     <div class="col-6">
                         <label for="startdate" class="form-label">Start date</label>
-                        <InputDate id="startdate" @bind-Value="CourseCreate.StartDate" class="form-control" min="@CourseCreate.StartDate" />
-                        <ValidationMessage For="() => CourseCreate.StartDate" class="text-danger" />
+                        <DateInput TValue="DateOnly" @bind-Value="CourseCreate.StartDate" EnableMinMax="true"
+                                   Min="@CourseCreate.StartDate" Max="@CourseCreate.StartDate.AddYears(10)" />
                     </div>
                     <div class="col-6">
-
                         <label for="enddate" class="form-label">End date</label>
-                        <InputDate id="enddate" @bind-Value="CourseCreate.EndDate" class="form-control" min="@CourseCreate.StartDate" />
-                        <ValidationMessage For="() => CourseCreate.EndDate" class="text-danger" />
+                        <DateInput TValue="DateOnly" @bind-Value="CourseCreate.EndDate" EnableMinMax="true"
+                                   Min="@CourseCreate.EndDate" Max="@CourseCreate.StartDate.AddYears(10)" />
                     </div>
                 </div>
                 <div class="row">
