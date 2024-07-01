@@ -6,34 +6,37 @@
 
 <h3>Current courses</h3>
 
-<CreateCourse />
-
 <TeacherCourses />
 
-@* CREATE A NEW MODULE *@
-<Button Color="ButtonColor.Success" TooltipTitle="Create a new module"
-        @onclick="ShowCreateModuleFormModal">
-    Create Module Button
-</Button>
+<div class="my-4">
+    <h3>Actions</h3>
 
-<Modal @ref="_createModuleFormModal" Title="Create New Module"
-    HeaderCssClass="d-flex flex-row justify-content-between">
-    <BodyTemplate>
-        <CreateModuleForm />
-    </BodyTemplate>
-</Modal>
+    @* CREATE A NEW MODULE *@
+    <Button Color="ButtonColor.Primary" TooltipTitle="Create a new module"
+            @onclick="ShowCreateModuleFormModal">
+        Add New Module
+    </Button>
 
-@* CREATE A NEW ACTIVITY *@
-<Button Color="ButtonColor.Primary" TooltipTitle="Create a new activity"
-    @onclick="ShowCreateActivityFormModal">Placeholder Create Activity Button</Button>
+    <Modal @ref="_createModuleFormModal" Title="Create New Module"
+        HeaderCssClass="d-flex flex-row justify-content-between">
+        <BodyTemplate>
+            <CreateModuleForm />
+        </BodyTemplate>
+    </Modal>
 
-<Modal @ref="_createActivityFormModal" Title="Create New Activity"
-    HeaderCssClass="d-flex flex-row justify-content-between">
-    <BodyTemplate>
-        <CreateActivityForm />
-    </BodyTemplate>
-</Modal>
+    @* CREATE A NEW ACTIVITY *@
+    <Button Color="ButtonColor.Primary" TooltipTitle="Create a new activity"
+        @onclick="ShowCreateActivityFormModal">Add New Activity</Button>
 
+    <Modal @ref="_createActivityFormModal" Title="Create New Activity"
+        HeaderCssClass="d-flex flex-row justify-content-between">
+        <BodyTemplate>
+            <CreateActivityForm />
+        </BodyTemplate>
+    </Modal>
+
+    <CreateCourse />
+</div>
 
 
 @code {

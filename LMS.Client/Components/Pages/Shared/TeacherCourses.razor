@@ -1,7 +1,8 @@
 ﻿@inject HttpClient ApiClient
 @inject UserManager<User> UserManager
+@inject NavigationManager NavigationManager
 
-<div>
+<Accordion class="d-flex flex-column my-2">
     @if (!_apiAvailable)
     {
         <div class="alert alert-danger" role="alert">API not available</div>
@@ -14,24 +15,27 @@
             {
                 foreach (var course in _courses)
                 {
-                    <Card class="mb-4">
-                        <CardHeader class="pb-0" Color="CardColor.Secondary">
-                            <h5>@course.Name</h5>
-                        </CardHeader>
-                        <CardBody>
-                            <strong>Duration:</strong> @course.StartDate - @course.EndDate
-                            <hr>
+                    <AccordionItem Title="@course.Name">
+                        <Content>
                             <span>
-                                @(course.Description?.Length > 100 ? $"{course.Description.Substring(0, 100)}..." :
-                                    course.Description ?? "No description available")
+                                <strong>Duration:</strong> @course.StartDate - @course.EndDate
                             </span>
-                        </CardBody>
-                    </Card>
+                            <div class="d-flex flex-column my-2">
+                                <span>
+                                    @(course.Description?.Length > 100 ? $"{course.Description.Substring(0, 100)}..." :
+                                        course.Description ?? "No description available")
+                                </span>
+                            </div>
+
+                            <button class="btn btn-primary my-2" @onclick="@((_) => 
+                                NavigationManager.NavigateTo($"/course/{course.CourseId}/{course.Name}/modules"))">Modules</button>
+                        </Content>
+                    </AccordionItem>
                 }
             }
             else
             {
-                <div class="alert alert-primary" role="alert">No course available</div>
+                <div class="alert alert-primary" role="alert">No courses available</div>
              }
         }
         else
@@ -39,7 +43,7 @@
             <div class="alert alert-primary" role="alert">Loading...</div>
         }
     }
-</div>
+</Accordion>
 
 @code {
     private IEnumerable<CourseBaseModel> _courses = new List<CourseBaseModel>();
@@ -55,11 +59,9 @@
         {
             var authState = await authenticationState;
             var user = authState.User;
-            Console.WriteLine($"user is {user}");
 
             // not sure this is needed:
             var targetUser = await UserManager.GetUserAsync(user);
-            Console.WriteLine($"targetuser is {targetUser}");
 
             try
             {

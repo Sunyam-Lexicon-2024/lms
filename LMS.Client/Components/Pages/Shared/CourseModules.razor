@@ -1,0 +1,28 @@
+﻿@page "/course/{CourseId:int}/{CourseName}/modules"
+
+
+<h3>@CourseName Modules</h3>
+<Modules CourseId="CourseId" />
+
+<NavLink class="btn me-1" href="/teacher">
+    <button type="button" class="btn btn-outline-primary">Back to courses</button>
+</NavLink>
+
+@code {
+
+    [Parameter]
+    public int CourseId { get; set; }
+
+    [Parameter]
+    public string CourseName { get; set; }
+
+    // protected override void OnInitialized()
+    // {
+    //     var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+    //     if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).TryGetValue("name", out var courseName))
+    //     {
+    //         CourseName = courseName;
+    //     }
+    // }
+
+}
