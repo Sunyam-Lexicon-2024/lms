@@ -9,16 +9,13 @@
 @* CREATE A NEW MODULE *@
 <Button Color="ButtonColor.Success" TooltipTitle="Create a new module"
         @onclick="ShowCreateModuleFormModal">
-    Placeholder Create Module Button
+    Create Module Button
 </Button>
 
 <Modal @ref="_createModuleFormModal" Title="Create New Module"
     HeaderCssClass="d-flex flex-row justify-content-between">
     <BodyTemplate>
-        @* <p>MODAL SHOWING</p> *@
-
         <CreateModuleForm />
-
     </BodyTemplate>
 </Modal>
 

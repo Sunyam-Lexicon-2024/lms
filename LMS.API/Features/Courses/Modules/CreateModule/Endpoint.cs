@@ -61,6 +61,8 @@ public class Endpoint : Endpoint<
             AddError(r => r.StartDate, "End date out of scope of course period");
         }
 
+        ThrowIfAnyErrors();
+
         var newModule = Map.ToEntity(req);
 
         // Save the new module to database.

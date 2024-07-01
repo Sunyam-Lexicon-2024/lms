@@ -24,17 +24,9 @@
                 .NotNull()
                 .WithMessage("Module must be assigned to a course");
 
-            RuleFor(r => r.StartDate)
-                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
-                .WithMessage("Module start date must be current or future date");
-
             RuleFor(r => r.EndDate)
                 .GreaterThanOrEqualTo(r => r.StartDate)
                 .WithMessage("Module end date cannot be before start date");
-
-            RuleFor(r => r.EndDate)
-                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
-                .WithMessage("Module end date must be current or future date");
         }
     }
 }
