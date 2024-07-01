@@ -2,32 +2,79 @@
 @inject UserManager<User> UserManager
 
 <div>
-    @if (_dataLoaded)
+    @if (!_apiAvailable)
     {
-        @foreach (var course in _courses)
+        <div class="alert alert-danger" role="alert">API not available</div>
+    }
+    else
+    {
+        if (_dataLoaded)
         {
-            <Card class="mb-4">
-                <CarHeader class="pb-0" Color="CardColor.Secondary">
-                    <h5>@course.Name</h5>
-                </CarHeader>
-                <CardBody>
-
-                </CardBody>
-            </Card>
+            if (_courses is not null)
+            {
+                foreach (var course in _courses)
+                {
+                    <Card class="mb-4">
+                        <CardHeader class="pb-0" Color="CardColor.Secondary">
+                            <h5>@course.Name</h5>
+                        </CardHeader>
+                        <CardBody>
+                            <strong>Duration:</strong> @course.StartDate - @course.EndDate
+                            <hr>
+                            <span>
+                                @(course.Description?.Length > 100 ? $"{course.Description.Substring(0, 100)}..." :
+                                    course.Description ?? "No description available")
+                            </span>
+                        </CardBody>
+                    </Card>
+                }
+            }
+            else
+            {
+                <div class="alert alert-primary" role="alert">No course available</div>
+             }
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">Loading...</div>
         }
     }
 </div>
 
 @code {
-    private IEnumerable<CourseBaseModel> _courses = new List();
+    private IEnumerable<CourseBaseModel> _courses = new List<CourseBaseModel>();
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
 
     protected async override Task OnInitializedAsync()
-    { 
-        var response = await ApiClient.GetFromJsonAsync<IEnumerable<CourseBaseModel>>($"course/get-all-course");
-        if (response != null)
+    {
+        if (authenticationState is not null)
         {
-            _courses = response;
-            _dataLoaded = true;
+            var authState = await authenticationState;
+            var user = authState.User;
+            Console.WriteLine($"user is {user}");
+
+            // not sure this is needed:
+            var targetUser = await UserManager.GetUserAsync(user);
+            Console.WriteLine($"targetuser is {targetUser}");
+
+            try
+            {
+                var response = await ApiClient.GetFromJsonAsync<IEnumerable<CourseBaseModel>>($"courses/get-all-courses");
+                if (response != null)
+                {
+                    _courses = response;
+                }
+
+                _dataLoaded = true;
+            }
+            catch
+            {
+                _apiAvailable = false;
+            }
         }
     }
 }
