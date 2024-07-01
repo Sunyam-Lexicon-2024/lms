@@ -1,0 +1,116 @@
+@using BlazorBootstrap
+@using LMS.Core.Entities
+@using LMS.Core.Models
+@inject HttpClient ApiClient
+@inject ModalService ModalService
+@inject ILogger<Document> Logger
+
+<div style="padding-top:1rem;margin-top:1rem;">
+    <h3>Documents</h3>
+    <Accordion>
+        @if (!_apiAvailable)
+        {
+            <Alert Color="AlertColor.Danger">API not available</Alert>
+        }
+        else
+        {
+            @if (_dataLoaded)
+            {
+                if (_documents.Count() > 0)
+                {
+                    @foreach (var d in _documents)
+                    {
+                        <AccordionItem Title="@d.Name">
+                            <Content>
+                                <span><strong>Uploaded:</strong> @d.UploadedAt.ToString("yyyy-MM-dd")</span>
+                                <div class="d-flex flex-row my-2">
+                                    <span><strong>Title:</strong></span>
+                                    <span>@(d.Description?.Length > 100 ? $"{d.Description.Substring(0, 100)}..." : d.Description ?? "No description available")</span>
+                                </div>
+                                <button class="btn btn-primary my-2" @onclick="@(() => ShowModal(d))">View Details</button>
+                            </Content>
+                        </AccordionItem>
+                    }
+                }
+                else
+                {
+                    <Alert Color="AlertColor.Primary">No documents available</Alert>
+                }
+            }
+            else
+            {
+                <Alert Color="AlertColor.Primary">Loading...</Alert>
+            }
+        }
+    </Accordion>
+</div>
+
+<Modal @ref="_docModal" />
+
+@code {
+    [Parameter]
+    public string? UserId { get; set; }
+
+    private IEnumerable<DocumentBaseModel> _documents = Enumerable.Empty<DocumentBaseModel>();
+    private Modal? _docModal;
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
+    private string? _docTitle;
+    @* private DocumentBaseModel? _currentDocument; *@
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(UserId))
+        {
+            try
+            {
+                Console.WriteLine($"Fetching documents for UserId: {UserId}");
+                var response = await ApiClient.GetFromJsonAsync<Response>($"/api/documents/get-user-documents/{UserId}");
+                if (response?.Documents != null)
+                {
+                    _documents = response.Documents;
+                    _dataLoaded = true;
+                    Console.WriteLine($"Fetched {_documents.Count()} documents.");
+                }
+                else
+                {
+                    _apiAvailable = false;
+                    Console.Error.WriteLine("API response is null or documents are null");
+                }
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                _apiAvailable = false;
+                Console.Error.WriteLine($"Request error: {httpRequestException.Message}");
+            }
+        }
+    }
+
+    private async Task ShowModal(DocumentBaseModel document)
+    {
+        if (document is not null)
+        {
+            _docTitle = document.Name;
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("Description", document.Description);
+            parameters.Add("Uploaded", document.UploadedAt);
+            parameters.Add("Url", document.Url);
+
+            if (_docModal != null)
+            {
+                await _docModal.ShowAsync<DocumentBaseModel>(title: _docTitle, parameters: parameters);
+            }
+        }
+        
+    }
+
+    private void HideModal()
+    {
+        _docModal?.HideAsync();
+    }
+
+    private class Response
+    {
+        public IEnumerable<DocumentBaseModel>? Documents { get; set; }
+    }
+}
