@@ -3,55 +3,49 @@
 @inject ILogger<Modules> Logger
 
 <Accordion>
-@if (!_apiAvailable)
-{
-    <div class="alert alert-danger" role="alert">API not available</div>
-}
-else
-{
-    @if (_dataLoaded)
+    @if (!_apiAvailable)
     {
-        if (_modules.Any())
+        <div class="alert alert-danger" role="alert">API not available</div>
+    }
+    else
+    {
+        @if (_dataLoaded)
         {
-            @foreach (var m in _modules)
+            if (_modules.Any())
             {
-                <AccordionItem Title="@m.Name">
-                    <Content>
-                        <span><strong>Start:</strong> @m.StartDate</span>
-                        <span><strong>End:</strong> @m.EndDate</span>
-                        <div class="d-flex flex-column my-2">@(m.Description?.Length > 100 ? $"{m.Description.Substring(0, 100)}..." : m.Description ?? "No description available")</div>
-                        <button class="btn btn-primary my-2" @onclick="@((_) => ShowModal(m))">Module Activities</button>
-                    </Content>
-                </AccordionItem>
+                @foreach (var m in _modules)
+                {
+                    <AccordionItem Title="@m.Name">
+                        <Content>
+                            <span><strong>Start:</strong> @m.StartDate</span>
+                            <span><strong>End:</strong> @m.EndDate</span>
+                            <div class="d-flex flex-column my-2">@(m.Description?.Length > 100 ? $"{m.Description.Substring(0, 100)}..."
+                : m.Description ?? "No description available")</div>
+                            <button class="btn btn-primary my-2" @onclick="@((_) => ShowModal(m))">Module Activities</button>
+                        </Content>
+                    </AccordionItem>
+                }
+            }
+            else
+            {
+                <div class="alert alert-primary" role="alert">No courses available</div>
             }
         }
         else
         {
-            <div class="alert alert-primary" role="alert">No courses available</div>
+            <div class="alert alert-primary" role="alert">Loading...</div>
         }
     }
-    else
-    {
-        <div class="alert alert-primary" role="alert">Loading...</div>
-    }
-}
-</Accordion>
+    </Accordion>
 
-<Modal 
-    @ref="_moduleModal" 
-    Title="@_moduleTitle" 
-    HeaderCssClass="d-flex flex-row justify-content-between"
-    OnHiding="OnModalHidingAsync">
-    <BodyTemplate>
-        <ModuleActivities 
-            @ref="_activitiesComponent"  
-            Activities="_moduleActivities" 
-            ModuleTitle="_moduleTitle" 
-        />
-    </BodyTemplate>
-</Modal>
+    <Modal @ref="_moduleModal" Title="@_moduleTitle" HeaderCssClass="d-flex flex-row justify-content-between"
+        OnHiding="OnModalHidingAsync">
+        <BodyTemplate>
+            <ModuleActivities @ref="_activitiesComponent" Activities="_moduleActivities" ModuleTitle="_moduleTitle" />
+        </BodyTemplate>
+    </Modal>
 
-@code {
+    @code {
 
     private bool _apiAvailable = true;
     private bool _dataLoaded = false;
@@ -75,6 +69,7 @@ else
         {
             var response = await ApiClient.GetFromJsonAsync<ModuleData>($"courses/{CourseId}/modules")!;
             _modules = response!.Modules!;
+            _apiAvailable = true;
             _dataLoaded = true;
         }
         catch
@@ -87,8 +82,25 @@ else
     {
         try
         {
-            _moduleActivities = await ApiClient
-            .GetFromJsonAsync<IEnumerable<ModuleActivityBaseModel>>($"courses/modules/{module.ModuleId}/get-all-activities");
+            HttpResponseMessage response = await ApiClient.GetAsync($"courses/modules/{module.ModuleId}/get-all-activities");
+            if (response.IsSuccessStatusCode)
+            {
+                if ((int)response.StatusCode == 200)
+                {
+                    _moduleActivities = await response.Content.ReadFromJsonAsync
+                    <IEnumerable<ModuleActivityBaseModel>>();
+                }
+                else
+                {
+                    _moduleActivities = [];
+                }
+                _dataLoaded = true;
+                _apiAvailable = true;
+            }
+            else
+            {
+                _apiAvailable = false;
+            }
         }
         catch (Exception ex)
         {
