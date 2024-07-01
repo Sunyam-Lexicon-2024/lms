@@ -1,0 +1,132 @@
+﻿@inject HttpClient ApiClient
+@inject ToastService ToastService
+
+<div class="container-fluid">
+    @if (!_apiAvailable)
+    {
+        <Alert Color="AlertColor.Danger">
+            <Icon Name="IconName.ExclamationTriangleFill" />
+            API not available
+        </Alert>
+    }
+    else
+    {
+        @if (_dataLoaded)
+        { 
+            <EditForm Model="_createModuleFormModel" OnSubmit="Submit" FormName="CreateModuleForm">
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Name</strong></label>
+                    <InputText @bind-Value="_createModuleFormModel!.Name" placeholder="Enter name..." />
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Description</strong></label>
+                    <InputText @bind-Value="_createModuleFormModel!.Description" placeholder="Enter description..." />
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Course</strong></label>
+                    <InputSelect @bind-Value="_createModuleFormModel.ParentId">
+                        @foreach (var c in _courses!)
+                        {
+                            <option value="@c.CourseId">@c.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>Start Date</strong></label>
+                    <DateInput TValue="DateOnly" @bind-Value="_createModuleFormModel.StartDate" EnableMinMax="true"
+                        Min="@_selectedCourse!.StartDate" Max="@_selectedCourse!.EndDate" />
+                </div>
+                <div class="mb-3 d-flex flex-column">
+                    <label class="form-label"><strong>End Date</strong></label>
+                    <DateInput TValue="DateOnly" @bind-Value="_createModuleFormModel.EndDate" EnableMinMax="true"
+                        Min="@_selectedCourse!.StartDate" Max="@_selectedCourse!.EndDate" />
+                </div>
+                <Button Type="ButtonType.Submit" Color="ButtonColor.Primary">Create Module</Button>
+            </EditForm>
+            @if (_errorResponse is not null && _errorResponse.Errors!.Count > 0)
+            {
+                <Alert class="d-flex flex-column mt-2" Color="AlertColor.Danger">
+                    <Icon Name="IconName.ExclamationTriangleFill" />
+                    <p><strong>Validation failed</strong></p>
+                    <hr>
+                    @foreach (var (property, errors) in _errorResponse.Errors)
+                    {
+                        <p><strong>@property</strong></p>
+                        foreach (var e in errors)
+                        {
+                            <p>@e</p>
+                        }
+                    }
+                </Alert>
+            }
+        }
+        else
+        {
+            <Alert Color="AlertColor.Info">Loading...</Alert>
+        }
+    }
+</div>
+
+@code {
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
+    private CourseBaseModel _selectedCourse = default!;
+    private IEnumerable<CourseBaseModel>? _courses = [];
+    private ModuleCreateModel _createModuleFormModel = new();
+    private ApiErrorResponseModel? _errorResponse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            _courses = await ApiClient.GetFromJsonAsync<IEnumerable<CourseBaseModel>>("courses/get-all-courses");
+            if (_courses != null && _courses.Any())
+            {
+                _selectedCourse = _courses.First();
+                SetCourse();
+                _dataLoaded = true;
+            }
+            _apiAvailable = true;
+        } 
+        catch 
+        { 
+            _apiAvailable = false;
+        }
+    }
+
+    private void SetCourse()
+    {
+        _createModuleFormModel.ParentId = _selectedCourse.CourseId;
+    }
+
+    private async Task Submit()
+    {
+        var response = await ApiClient.PostAsJsonAsync<ModuleCreateModel>("courses/modules/create-module", _createModuleFormModel);
+        if (!response.IsSuccessStatusCode)
+        {
+            try
+            {
+                _errorResponse = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>()!;
+                ToastService.Notify(new(ToastType.Danger, $"Could not create module '{_createModuleFormModel.Name}'."));
+            }
+            catch
+            {
+                _errorResponse = new()
+                {
+                    Errors = new Dictionary<string, List<string>>() 
+                    { 
+                        { "Unexpected error", [await response.Content.ReadAsStringAsync()] }
+                    }
+                };
+                ToastService.Notify(new(ToastType.Danger, $"Unexpected error: '{_createModuleFormModel.Name}'."));
+            }
+        }
+        else
+        { 
+            ToastService.Notify(new(ToastType.Success, $"Module '{_createModuleFormModel.Name}' created successfully."));
+            _createModuleFormModel = new();
+            _errorResponse = null;
+            SetCourse();
+        }
+    }
+}
