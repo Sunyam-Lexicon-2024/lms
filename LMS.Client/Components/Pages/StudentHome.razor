@@ -1,5 +1,6 @@
 ﻿@page "/Student/"
 @inject UserManager<User> UserManager
+@attribute [Authorize(Roles = "Admin, Student")]
 
 <PageTitle>Student Home</PageTitle>
 

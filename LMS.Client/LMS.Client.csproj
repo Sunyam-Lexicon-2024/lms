@@ -27,4 +27,12 @@
     <None Include="Components\Pages\Shared\StudentCourse.razor" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Shared\Forms\CreateModuleForm.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Pages\Shared\Forms\CreateModuleForm.razor" />
+  </ItemGroup>
+
 </Project>

@@ -53,25 +53,24 @@
         {
             var authState = await authenticationState;
             var user = authState.User;
-            var targetUser = await UserManager.GetUserAsync(user);
+            var courseId = user.Claims.Where(c => c.Type == "Course")
+            .Select(c => c.Value)
+            .SingleOrDefault();
 
-            if (targetUser is not null)
+            try
             {
-                try
+                var response = await ApiClient.GetFromJsonAsync<Response>($"courses/{courseId}/get-course");
+                if (response != null && response.StudentCourse != null)
                 {
-                    var response = await ApiClient.GetFromJsonAsync<Response>($"users/students/{targetUser.Id}/course");
-                    if (response != null && response.StudentCourse != null)
-                    {
-                        _studentCourse = response.StudentCourse;
-                    }
+                    _studentCourse = response.StudentCourse;
+                }
 
-                    _apiAvailable = true;
-                    _dataLoaded = true;
-                }
-                catch
-                {
-                    _apiAvailable = false;
-                }
+                _apiAvailable = true;
+                _dataLoaded = true;
+            }
+            catch
+            {
+                _apiAvailable = false;
             }
         }
     }
