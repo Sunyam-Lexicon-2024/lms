@@ -15,7 +15,7 @@
             {
                 <h3>Current Course</h3>
                 <Card class="mb-4">
-                    <CardHeader class="pb-0"  Color="CardColor.Secondary">
+                    <CardHeader class="pb-0" Color="CardColor.Secondary">
                         <h5>@_studentCourse.Name</h5>
                     </CardHeader>
                     <CardBody>
@@ -65,6 +65,7 @@
                         _studentCourse = response.StudentCourse;
                     }
 
+                    _apiAvailable = true;
                     _dataLoaded = true;
                 }
                 catch
