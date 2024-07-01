@@ -1,11 +1,14 @@
-@Base = http://localhost:5000/api/documents
+@Base = http://localhost:5000/api
 
 @UserId = 4820ae13-ac1f-4e13-b16a-6b95f01b1456
+
+# @TeacherId = 30cd5bf3-2262-469c-890b-52f41569257d
+@TeacherId = 7faf58b8-d1cc-4e29-b38a-a7d1ff710657
 
 @Id = 1
 
 # Get Document with Id
-@GetDoc = {{Base}}/{{UserId}}/get-document-by-id/{{Id}}
+@GetDoc = {{Base}}/documents/{{UserId}}/get-document-by-id/{{Id}}
 
 GET {{GetDoc}}
 Accept: application/json
@@ -15,8 +18,17 @@ Accept: application/json
 
 # Get all of user's documents
 
-@GetUserDocs = {{Base}}/get-user-documents/{{UserId}}
+@GetUserDocs = {{Base}}/documents/get-user-documents/{{UserId}}
 
 
 GET {{GetUserDocs}}
+Accept: application/json
+
+###
+
+
+
+@GetTeacherCourses = {{Base}}/users/teachers/{{TeacherId}}/courses
+
+Get {{GetTeacherCourses}}
 Accept: application/json

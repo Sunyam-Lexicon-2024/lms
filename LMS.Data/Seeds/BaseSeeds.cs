@@ -184,7 +184,7 @@ public class BaseSeeds(LmsDbContext context)
     // Generate Documents
      private async Task GenerateDocuments(int count)
     {
-        var users = _context.Users.OfType<Student>().ToList();
+        var users = _context.Users.ToList();
         var courseElements = _context.CourseElements.OfType<Course>().ToList();
 
         if (users.Count == 0 || courseElements.Count == 0)

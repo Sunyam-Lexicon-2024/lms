@@ -1,0 +1,93 @@
+@using BlazorBootstrap
+@using LMS.Core.Entities
+@using LMS.Core.Models
+@inject ModalService ModalService
+@inject HttpClient ApiClient
+@inject ILogger<UserDocuments> Logger
+
+
+
+<div>
+    @if (!_apiAvailable)
+    {
+        <div class="alert alert-danger" role="alert">API not available</div>
+    }
+    else
+    {
+        @if (_dataLoaded)
+        {
+            @if (_teacherCourses?.Any() ?? false)
+            {
+                @foreach (var c in _teacherCourses)
+                {
+                    <h3>Course</h3>
+                    <Card class="mb-4">
+                        <CardHeader class="pb-0" Color="CardColor.Secondary">
+                            <h5>@c.Name</h5>
+                        </CardHeader>
+                        <CardBody>
+                            <strong>Duration:</strong> @c.StartDate - @c.EndDate
+                            <hr>
+                            <span>@(c.Description?.Length > 100 ? $"{c.Description.Substring(0, 100)}..." :
+                                  c.Description ?? "No description available")</span>
+                        </CardBody>
+                    </Card>
+                }
+            }
+            else
+            {
+                <div class="alert alert-primary" role="alert">No courses available</div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">Loading...</div>
+        }
+    }
+</div>
+
+@code {
+    private IEnumerable<TeacherCourseBaseModel> _teacherCourses = Enumerable.Empty<TeacherCourseBaseModel>();
+    private bool _apiAvailable = true;
+    private bool _dataLoaded = false;
+
+    [Parameter]
+    public string? UserId { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(UserId))
+            {
+                @* var response = await ApiClient.GetFromJsonAsync<Response>($"users/teachers/{UserId}/courses"); *@
+
+                @* Put an id to test, uncomment the line above and comment the line below *@
+                var response = await ApiClient.GetFromJsonAsync<Response>($"users/teachers/30cd5bf3-2262-469c-890b-52f41569257d/courses");
+
+
+                if (response != null && response.teacherCourses != null)
+                {
+                    _teacherCourses = response.teacherCourses;
+                }
+
+                _dataLoaded = true;
+            }
+            else
+            {
+                _apiAvailable = false;
+                Console.Error.WriteLine("UserId is null or empty.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error fetching courses: {ex.Message}");
+            _apiAvailable = false;
+        }
+    }
+
+    private class Response
+    {
+        public IEnumerable<TeacherCourseBaseModel>? teacherCourses { get; set; }
+    }
+}
